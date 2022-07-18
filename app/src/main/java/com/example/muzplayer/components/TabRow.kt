@@ -4,12 +4,12 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
@@ -19,31 +19,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.muzplayer.MusicScreen
+import com.example.muzplayer.ui.theme.ScreenBg
 import com.example.muzplayer.ui.theme.TabPurple
-import com.example.muzplayer.ui.theme.Teal200
 import java.util.*
 
 @Composable
-fun RallyTabRow(
+fun MusicTabRow(
     allScreens: List<MusicScreen>,
     onTabSelected: (MusicScreen) -> Unit,
     currentScreen: MusicScreen
 ) {
     Surface(
-        Modifier
+        color = ScreenBg,
+        modifier = Modifier
             .height(TabHeight)
             .fillMaxWidth()
     ) {
         Row(Modifier.selectableGroup()) {
             allScreens.forEach { screen ->
-                RallyTab(
+                MusicTab(
                     text = screen.name,
                     icon = screen.icon,
                     onSelected = { onTabSelected(screen) },
@@ -55,7 +55,7 @@ fun RallyTabRow(
 }
 
 @Composable
-private fun RallyTab(
+private fun MusicTab(
     text: String,
     icon: ImageVector,
     onSelected: () -> Unit,
