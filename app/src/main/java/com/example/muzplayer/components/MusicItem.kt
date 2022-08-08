@@ -70,7 +70,6 @@ fun CoilImage(uri: String?) {
                 .crossfade(true)
                 .build(),
             placeholder = painterResource(R.drawable.ic_default_artwork),
-            fallback = painterResource(R.drawable.ic_default_artwork),
             contentDescription = "Music Art",
             contentScale = ContentScale.Fit,
         )
