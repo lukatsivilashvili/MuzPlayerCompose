@@ -35,7 +35,7 @@ fun MusicItem(
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CoilImage(uri = music.imageUrl)
+        CoilImage(uri = if (music.hasArt) music.imageUrl else null)
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = music.title,
@@ -55,7 +55,7 @@ fun MusicItem(
 }
 
 @Composable
-fun CoilImage(uri: String) {
+fun CoilImage(uri: String?) {
     Box(
         modifier = Modifier
             .width(64.dp)

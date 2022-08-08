@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import com.example.muzplayer.models.Song
 
 class MediaStoreLoader {
@@ -12,6 +13,7 @@ class MediaStoreLoader {
 
     private var initialized = false
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     fun initializeListIfNeeded(context: Context): ArrayList<Song> {
         val collection =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

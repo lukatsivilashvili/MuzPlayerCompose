@@ -10,7 +10,8 @@ fun MediaMetadataCompat.toSong(): Song? {
             title = it.title.toString(),
             subtitle = it.subtitle.toString(),
             songUrl = it.mediaUri.toString(),
-            imageUrl = it.iconUri.toString()
+            imageUrl = it.iconUri.toString(),
+            hasArt = true
         )
     }
 }

@@ -1,7 +1,13 @@
 package com.example.muzplayer.viewmodels
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.Uri
+import android.os.Build
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
+import android.util.Size
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,11 +20,13 @@ import com.example.muzplayer.models.Song
 import com.example.muzplayer.utils.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.io.FileNotFoundException
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val musicServiceConnection: MusicServiceConnection
+    private val musicServiceConnection: MusicServiceConnection,
+    @SuppressLint("StaticFieldLeak") private val context: Context
 ) : ViewModel() {
 
     var mediaItems = mutableStateOf<Resource<List<Song>>>(Resource.Loading(null))
@@ -34,6 +42,7 @@ class MainViewModel @Inject constructor(
         musicServiceConnection.subscribe(
             MEDIA_ROOT_ID,
             object : MediaBrowserCompat.SubscriptionCallback() {
+                @RequiresApi(Build.VERSION_CODES.Q)
                 override fun onChildrenLoaded(
                     parentId: String,
                     children: MutableList<MediaBrowserCompat.MediaItem>
@@ -45,7 +54,8 @@ class MainViewModel @Inject constructor(
                             it.description.title.toString(),
                             it.description.subtitle.toString(),
                             it.description.mediaUri.toString(),
-                            it.description.iconUri.toString()
+                            it.description.iconUri.toString(),
+                            hasArt = checkHasArt(it.description.mediaUri)
                         )
                     }
                     mediaItems.value = Resource.Success(items)
@@ -53,6 +63,18 @@ class MainViewModel @Inject constructor(
             })
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun checkHasArt(artUri: Uri?): Boolean {
+        var hasArt = true
+        try {
+            if (artUri != null) {
+                context.contentResolver.loadThumbnail(artUri, Size(64, 64), null)
+            }
+        } catch (_: FileNotFoundException) {
+            hasArt = false
+        }
+        return hasArt
+    }
 
 
     fun skipToNextSong() {

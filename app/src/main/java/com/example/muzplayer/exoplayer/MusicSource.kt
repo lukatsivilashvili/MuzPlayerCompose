@@ -1,11 +1,13 @@
 package com.example.muzplayer.exoplayer
 
 import android.content.Context
+import android.os.Build
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
+import androidx.annotation.RequiresApi
 import com.example.muzplayer.exoplayer.State.*
 import com.example.muzplayer.utils.MediaStoreLoader
 import com.google.android.exoplayer2.MediaItem
@@ -23,6 +25,7 @@ class MusicSource @Inject constructor(
 
     var songs = emptyList<MediaMetadataCompat>()
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     suspend fun fetchMediaData() = withContext(Dispatchers.Main) {
         state = STATE_INITIALIZING
         Dispatchers.IO
@@ -35,8 +38,8 @@ class MusicSource @Inject constructor(
                 .putString(METADATA_KEY_DISPLAY_SUBTITLE, song.subtitle)
                 .putString(METADATA_KEY_MEDIA_ID, song.mediaId)
                 .putString(METADATA_KEY_MEDIA_URI, song.songUrl)
-                .putString(METADATA_KEY_DISPLAY_ICON_URI, song.imageUrl)
-                .putString(METADATA_KEY_ALBUM_ART_URI, song.imageUrl)
+                .putString(METADATA_KEY_DISPLAY_ICON_URI, if (song.hasArt) song.imageUrl else null)
+                .putString(METADATA_KEY_ALBUM_ART_URI, if (song.hasArt) song.imageUrl else null)
                 .putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.subtitle)
                 .build()
         }
