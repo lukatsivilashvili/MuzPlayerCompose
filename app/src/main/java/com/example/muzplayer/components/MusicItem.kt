@@ -10,16 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.muzplayer.R
 import com.example.muzplayer.models.Song
-import com.example.muzplayer.ui.theme.MuzPlayerTheme
 import com.example.muzplayer.viewmodels.MainViewModel
 
 @Composable
@@ -68,27 +66,13 @@ fun CoilImage(uri: String) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(uri)
+                .fallback(R.drawable.ic_default_artwork)
                 .crossfade(true)
                 .build(),
+            placeholder = painterResource(R.drawable.ic_default_artwork),
+            fallback = painterResource(R.drawable.ic_default_artwork),
             contentDescription = "Music Art",
             contentScale = ContentScale.Fit,
-        )
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2, device = Devices.PIXEL_4_XL)
-@Composable
-fun MusicItemPreview() {
-    MuzPlayerTheme() {
-        MusicItem(
-            music = Song(
-                "1",
-                "Only God Can Judge Me",
-                "last trial",
-                "2pac",
-                "4:30"
-            ),
-            viewModel = hiltViewModel()
         )
     }
 }

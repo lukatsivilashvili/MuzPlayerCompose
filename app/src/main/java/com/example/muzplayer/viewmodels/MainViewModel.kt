@@ -25,14 +25,7 @@ class MainViewModel @Inject constructor(
 
     var showPlayerFullScreen by mutableStateOf(false)
 
-    val isConnected = musicServiceConnection.isConnected
-    val networkError = musicServiceConnection.networkFailure
-    val curPlayingSong = musicServiceConnection.nowPlaying
-
     val currentPlayingSong = musicServiceConnection.currentPlayingSong
-
-    val songIsPlaying: Boolean
-        get() = playbackState.value?.isPlaying == true
 
     val playbackState = musicServiceConnection.playbackState
 
@@ -78,7 +71,6 @@ class MainViewModel @Inject constructor(
         val isPrepared = playbackState.value?.isPrepared ?: false
         if (isPrepared && mediaItem.mediaId ==
             currentPlayingSong.value?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
-//            curPlayingSong.value?.getString(METADATA_KEY_MEDIA_ID)
         ) {
             playbackState.value?.let { playbackState ->
                 when {

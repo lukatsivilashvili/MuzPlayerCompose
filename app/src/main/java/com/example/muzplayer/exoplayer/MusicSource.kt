@@ -7,7 +7,6 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import com.example.muzplayer.exoplayer.State.*
-import com.example.muzplayer.models.MusicModel
 import com.example.muzplayer.utils.MediaStoreLoader
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
@@ -23,7 +22,6 @@ class MusicSource @Inject constructor(
 ) {
 
     var songs = emptyList<MediaMetadataCompat>()
-    var songsTest: List<MusicModel> = emptyList()
 
     suspend fun fetchMediaData() = withContext(Dispatchers.Main) {
         state = STATE_INITIALIZING

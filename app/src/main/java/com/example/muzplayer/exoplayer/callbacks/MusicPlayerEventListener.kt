@@ -4,8 +4,9 @@ import android.widget.Toast
 import com.example.muzplayer.exoplayer.MusicService
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
+import javax.inject.Inject
 
-class MusicPlayerEventListener(
+class MusicPlayerEventListener @Inject constructor(
     private val musicService: MusicService
 ) : Player.Listener {
 

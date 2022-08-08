@@ -2,7 +2,6 @@ package com.example.muzplayer.components
 
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -33,7 +32,6 @@ import com.example.muzplayer.exoplayer.toSong
 import com.example.muzplayer.models.Song
 import com.example.muzplayer.viewmodels.MainViewModel
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeBottomBar(
     modifier: Modifier = Modifier,
@@ -67,7 +65,7 @@ fun HomeBottomBar(
                             },
                             onDrag = { change, dragAmount ->
                                 change.consumeAllChanges()
-                                val (x, y) = dragAmount
+                                val (x, _) = dragAmount
                                 offsetX = x
                             }
                         )

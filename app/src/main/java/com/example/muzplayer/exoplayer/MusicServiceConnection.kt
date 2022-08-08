@@ -10,7 +10,6 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.muzplayer.utils.Constants.NETWORK_FAILURE
 import com.example.muzplayer.utils.Event
 import com.example.muzplayer.utils.Resource
 
@@ -18,10 +17,6 @@ class MusicServiceConnection(
     context: Context
 ) {
     private val _isConnected = MutableLiveData<Event<Resource<Boolean>>>()
-    val isConnected: LiveData<Event<Resource<Boolean>>> = _isConnected
-
-    private val _networkFailure = MutableLiveData<Event<Resource<Boolean>>>()
-    val networkFailure: LiveData<Event<Resource<Boolean>>> = _networkFailure
 
     private val _playbackState = MutableLiveData<PlaybackStateCompat?>()
     val playbackState: LiveData<PlaybackStateCompat?> = _playbackState
@@ -107,16 +102,6 @@ class MusicServiceConnection(
 
         override fun onSessionEvent(event: String?, extras: Bundle?) {
             super.onSessionEvent(event, extras)
-            when (event) {
-                NETWORK_FAILURE -> _networkFailure.postValue(
-                    Event(
-                        Resource.Error(
-                            "Couldn't connect to the server. Please check your internet connection.",
-                            null
-                        )
-                    )
-                )
-            }
         }
 
         override fun onSessionDestroyed() {

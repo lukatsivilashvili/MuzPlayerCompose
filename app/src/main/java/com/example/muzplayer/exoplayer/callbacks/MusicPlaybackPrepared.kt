@@ -9,8 +9,9 @@ import com.example.muzplayer.exoplayer.MusicSource
 import com.google.android.exoplayer2.ControlDispatcher
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
+import javax.inject.Inject
 
-class MusicPlaybackPrepared(
+class MusicPlaybackPrepared @Inject constructor(
     private val musicSource: MusicSource,
     private val playerPrepared: (MediaMetadataCompat?) -> Unit
 ) : MediaSessionConnector.PlaybackPreparer {
