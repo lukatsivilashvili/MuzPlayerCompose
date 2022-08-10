@@ -7,9 +7,9 @@ val Purple500 = Color(0xFF6200EE)
 val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 
-val OnTabLight = Color(0xFFB91372)
-val TabLight = Color(0xFFFDFFFC)
-val TabLightSecondary = Color(0xFFFDFFFC)
+val OnTabLight = Color(0xFFFFFFFF)
+val TabLight = Color(0xFFffedf1)
+val TabLightSecondary = Color(0xFFFF5964)
 
 val OnTabDark = Color(0xFFFF0022)
 val TabDark = Color(0xFF12293d)
