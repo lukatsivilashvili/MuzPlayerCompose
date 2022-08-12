@@ -5,24 +5,19 @@ import androidx.compose.material.icons.filled.Audiotrack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlaylistPlay
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.muzplayer.ui.theme.ScreenBg
 
 enum class MusicScreen(
     val icon: ImageVector,
-    val background: androidx.compose.ui.graphics.Color
 ) {
     Home(
         icon = Icons.Filled.Home,
-        background = ScreenBg
     ),
     Library(
         icon = Icons.Filled.Audiotrack,
-        background = ScreenBg
 
     ),
     Playlists(
         icon = Icons.Filled.PlaylistPlay,
-        background = ScreenBg
     );
 
     companion object {

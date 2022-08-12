@@ -1,8 +1,10 @@
 package com.example.muzplayer.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +30,7 @@ fun MusicItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colors.primary)
             .padding(8.dp)
             .clickable {
                 viewModel.playOrToggleSong(music)

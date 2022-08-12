@@ -4,12 +4,12 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
@@ -25,8 +25,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.muzplayer.MusicScreen
-import com.example.muzplayer.ui.theme.ScreenBg
-import com.example.muzplayer.ui.theme.TabPurple
+import com.example.muzplayer.ui.theme.TabLight
+import com.example.muzplayer.ui.theme.OnTabLight
 import java.util.*
 
 @Composable
@@ -36,7 +36,7 @@ fun MusicTabRow(
     currentScreen: MusicScreen
 ) {
     Surface(
-        color = ScreenBg,
+        color = MaterialTheme.colors.secondary,
         modifier = Modifier
             .height(TabHeight)
             .fillMaxWidth()
@@ -61,7 +61,7 @@ private fun MusicTab(
     onSelected: () -> Unit,
     selected: Boolean
 ) {
-    val color = TabPurple
+    val color = MaterialTheme.colors.onPrimary
     val durationMillis = if (selected) TabFadeInAnimationDuration else TabFadeOutAnimationDuration
     val animSpec = remember {
         tween<Color>(
