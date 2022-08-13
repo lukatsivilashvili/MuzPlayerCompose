@@ -20,7 +20,7 @@ object ServiceModule {
 
     @ServiceScoped
     @Provides
-    fun provideMusicDatabase() = MediaStoreLoader()
+    fun provideMusicDatabase() = MediaStoreLoader
 
     @ServiceScoped
     @Provides

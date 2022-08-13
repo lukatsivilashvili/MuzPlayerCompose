@@ -8,8 +8,8 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import com.example.muzplayer.models.Song
 
-class MediaStoreLoader {
-    val musicItems = ArrayList<Song>()
+object MediaStoreLoader {
+    private val musicItems = ArrayList<Song>()
 
     private var initialized = false
 

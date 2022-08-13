@@ -46,18 +46,9 @@ class MusicService : MediaBrowserServiceCompat() {
     var isForegroundService = false
 
     private var currentPlayingSong: MediaMetadataCompat? = null
-
     private var isPlayerInitialize = false
 
     private lateinit var musicPlayerListener: MusicPlayerEventListener
-
-    companion object {
-        private const val TAG = "MediaPlayerService"
-
-        var currentSongDuration = 0L
-            private set
-    }
-
     override fun onCreate() {
         super.onCreate()
         serviceScope.launch {
@@ -79,9 +70,7 @@ class MusicService : MediaBrowserServiceCompat() {
             this,
             mediaSessionCompat.sessionToken,
             MusicPlayerNotificationListener(this)
-        ) {
-            currentSongDuration = exoPlayer.duration
-        }
+        )
 
         val musicPlaybackPreparer = MusicPlaybackPrepared(musicSource) {
             currentPlayingSong = it
@@ -136,7 +125,7 @@ class MusicService : MediaBrowserServiceCompat() {
         clientPackageName: String,
         clientUid: Int,
         rootHints: Bundle?
-    ): BrowserRoot? {
+    ): BrowserRoot {
         return BrowserRoot(MEDIA_ROOT_ID, null)
     }
 

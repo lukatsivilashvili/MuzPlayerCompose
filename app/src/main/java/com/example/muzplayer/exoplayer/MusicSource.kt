@@ -26,9 +26,8 @@ class MusicSource @Inject constructor(
     var songs = emptyList<MediaMetadataCompat>()
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    suspend fun fetchMediaData() = withContext(Dispatchers.Main) {
+    suspend fun fetchMediaData() = withContext(Dispatchers.IO) {
         state = STATE_INITIALIZING
-        Dispatchers.IO
         val allSongs = musicLoader.initializeListIfNeeded(context)
         songs = allSongs.map { song ->
             Builder()
@@ -43,7 +42,6 @@ class MusicSource @Inject constructor(
                 .putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.subtitle)
                 .build()
         }
-        Dispatchers.Main
         state = STATE_INITIALIZED
     }
 
