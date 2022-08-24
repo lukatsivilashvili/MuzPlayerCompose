@@ -26,6 +26,7 @@ fun SinglePermission() {
                 Lifecycle.Event.ON_START -> {
                     permissionState.launchPermissionRequest()
                 }
+                else -> {}
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
