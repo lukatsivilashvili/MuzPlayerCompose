@@ -57,6 +57,7 @@ fun HomeContent(
                     Divider(color = Color.Black, thickness = 0.5.dp)
                 }
             }
+            else -> {}
         }
 
     }
