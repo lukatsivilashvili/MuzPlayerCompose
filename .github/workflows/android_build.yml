@@ -13,11 +13,11 @@ jobs:
         with:
           java-version: 1.8
 
-      -name: Enable Gradle
+      - name: Enable Gradle
         run: chmod +x ./gradlew
 
-        - name: Run Tests
-          run: ./gradlew test
+      - name: Run Tests
+        run: ./gradlew test
 
-        - name: Build Project
-          run: ./gradlew assemble
+      - name: Build Project
+        run: ./gradlew assemble
