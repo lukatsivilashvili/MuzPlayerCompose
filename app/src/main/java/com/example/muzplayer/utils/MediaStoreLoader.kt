@@ -39,7 +39,7 @@ class MediaStoreLoader {
             sortOrder,
             null
         )
-        query?.use { cursor ->
+        query?.use {  ->
             val titleColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
