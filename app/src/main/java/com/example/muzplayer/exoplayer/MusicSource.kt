@@ -37,6 +37,7 @@ class MusicSource @Inject constructor(
                 .putString(METADATA_KEY_DISPLAY_SUBTITLE, song.subtitle)
                 .putString(METADATA_KEY_MEDIA_ID, song.mediaId)
                 .putString(METADATA_KEY_MEDIA_URI, song.songUrl)
+                .putLong(METADATA_KEY_DURATION, song.duration)
                 .putString(METADATA_KEY_DISPLAY_ICON_URI, if (song.hasArt) song.imageUrl else null)
                 .putString(METADATA_KEY_ALBUM_ART_URI, if (song.hasArt) song.imageUrl else null)
                 .putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.subtitle)

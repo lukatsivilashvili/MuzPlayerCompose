@@ -75,9 +75,7 @@ fun HomeBottomBar(
 
                     }
                     .background(
-                        if (!isSystemInDarkTheme()) {
-                            Color.LightGray
-                        } else Color.DarkGray
+                        MaterialTheme.colors.primary
                     ),
             ) {
                 HomeBottomBarItem(

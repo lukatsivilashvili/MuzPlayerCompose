@@ -48,11 +48,11 @@ class MainViewModel @Inject constructor(
                     super.onChildrenLoaded(parentId, children)
                     val items = children.map {
                         Song(
-                            it.mediaId!!,
-                            it.description.title.toString(),
-                            it.description.subtitle.toString(),
-                            it.description.mediaUri.toString(),
-                            it.description.iconUri.toString(),
+                            mediaId = it.mediaId!!,
+                            title = it.description.title.toString(),
+                            subtitle = it.description.subtitle.toString(),
+                            songUrl = it.description.mediaUri.toString(),
+                            imageUrl = it.description.iconUri.toString(),
                             hasArt = it.description.mediaUri.checkHasArt(context)
                         )
                     }

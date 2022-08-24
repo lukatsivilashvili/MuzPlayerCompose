@@ -45,12 +45,15 @@ object MediaStoreLoader {
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
             val artistColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+            val durationColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
             val albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
 
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idColumn)
                 val title = cursor.getString(titleColumn)
                 val artist = cursor.getString(artistColumn)
+                val duration = cursor.getLong(durationColumn)
                 val albumId = cursor.getLong(albumIdColumn).toString()
                 val contentUri: Uri = ContentUris.withAppendedId(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -64,6 +67,7 @@ object MediaStoreLoader {
                         mediaId = id.toString(),
                         title = title,
                         subtitle = artist,
+                        duration = duration,
                         songUrl = contentUri.toString(),
                         imageUrl = artUri
                     )
