@@ -51,6 +51,7 @@ class MainViewModel @Inject constructor(
                             mediaId = it.mediaId!!,
                             title = it.description.title.toString(),
                             subtitle = it.description.subtitle.toString(),
+                            duration = it.description.description.toString().toLong(),
                             songUrl = it.description.mediaUri.toString(),
                             imageUrl = it.description.iconUri.toString(),
                             hasArt = it.description.mediaUri.checkHasArt(context)

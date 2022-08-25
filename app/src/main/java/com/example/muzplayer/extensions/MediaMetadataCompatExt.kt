@@ -13,6 +13,7 @@ fun MediaMetadataCompat.toSong(context: Context): Song? {
             mediaId = it.mediaId ?: "",
             title = it.title.toString(),
             subtitle = it.subtitle.toString(),
+            duration = it.description.toString().toLong(),
             songUrl = it.mediaUri.toString(),
             imageUrl = it.iconUri.toString(),
             hasArt = it.mediaUri.checkHasArt(context)

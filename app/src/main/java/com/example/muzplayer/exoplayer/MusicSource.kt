@@ -40,7 +40,7 @@ class MusicSource @Inject constructor(
                 .putLong(METADATA_KEY_DURATION, song.duration)
                 .putString(METADATA_KEY_DISPLAY_ICON_URI, if (song.hasArt) song.imageUrl else null)
                 .putString(METADATA_KEY_ALBUM_ART_URI, if (song.hasArt) song.imageUrl else null)
-                .putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.subtitle)
+                .putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.duration.toString())
                 .build()
         }
         state = STATE_INITIALIZED
@@ -63,6 +63,7 @@ class MusicSource @Inject constructor(
             .setSubtitle(song.description.subtitle)
             .setMediaId(song.description.mediaId)
             .setIconUri(song.description.iconUri)
+            .setDescription(song.getLong(METADATA_KEY_DURATION).toString())
             .build()
         MediaBrowserCompat.MediaItem(desc, FLAG_PLAYABLE)
     }.toMutableList()
