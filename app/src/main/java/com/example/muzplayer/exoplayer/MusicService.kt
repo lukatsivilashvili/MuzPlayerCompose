@@ -14,8 +14,8 @@ import com.example.muzplayer.exoplayer.callbacks.MusicPlayerNotificationListener
 import com.example.muzplayer.utils.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.utils.Constants.NETWORK_FAILURE
 import com.example.muzplayer.utils.Constants.SERVICE_TAG
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -30,7 +30,7 @@ class MusicService : MediaBrowserServiceCompat() {
     lateinit var dataSourceFactory: DefaultDataSourceFactory
 
     @Inject
-    lateinit var exoPlayer: SimpleExoPlayer
+    lateinit var exoPlayer: ExoPlayer
 
     @Inject
     lateinit var musicSource: MusicSource

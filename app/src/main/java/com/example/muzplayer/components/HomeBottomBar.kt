@@ -1,8 +1,6 @@
 package com.example.muzplayer.components
 
-import android.os.Build
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,7 +29,6 @@ import com.example.muzplayer.extensions.toSong
 import com.example.muzplayer.models.Song
 import com.example.muzplayer.viewmodels.MainViewModel
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun HomeBottomBar(
     modifier: Modifier = Modifier,

@@ -1,13 +1,11 @@
 package com.example.muzplayer.exoplayer
 
 import android.content.Context
-import android.os.Build
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
-import androidx.annotation.RequiresApi
 import com.example.muzplayer.exoplayer.State.*
 import com.example.muzplayer.utils.MediaStoreLoader
 import com.google.android.exoplayer2.MediaItem
@@ -25,7 +23,6 @@ class MusicSource @Inject constructor(
 
     var songs = emptyList<MediaMetadataCompat>()
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     suspend fun fetchMediaData() = withContext(Dispatchers.IO) {
         state = STATE_INITIALIZING
         val allSongs = musicLoader.initializeListIfNeeded(context)

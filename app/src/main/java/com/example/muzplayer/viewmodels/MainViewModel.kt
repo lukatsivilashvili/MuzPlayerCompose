@@ -2,10 +2,8 @@ package com.example.muzplayer.viewmodels
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -40,7 +38,6 @@ class MainViewModel @Inject constructor(
         musicServiceConnection.subscribe(
             MEDIA_ROOT_ID,
             object : MediaBrowserCompat.SubscriptionCallback() {
-                @RequiresApi(Build.VERSION_CODES.Q)
                 override fun onChildrenLoaded(
                     parentId: String,
                     children: MutableList<MediaBrowserCompat.MediaItem>

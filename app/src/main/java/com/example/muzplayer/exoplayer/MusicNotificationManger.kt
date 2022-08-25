@@ -8,10 +8,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
-import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.muzplayer.R
@@ -67,7 +65,6 @@ class MusicNotificationManger(
         override fun getCurrentContentTitle(player: Player) =
             controller.metadata.description.title.toString()
 
-        @RequiresApi(Build.VERSION_CODES.Q)
         override fun getCurrentLargeIcon(
             player: Player,
             callback: PlayerNotificationManager.BitmapCallback
@@ -100,7 +97,6 @@ class MusicNotificationManger(
             }
         }
 
-        @RequiresApi(Build.VERSION_CODES.Q)
         private fun getArt(): Uri?{
             return if(controller.metadata.description.mediaUri.checkHasArt(context)){
                 controller.metadata.description.iconUri
