@@ -26,7 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.muzplayer.R
-import com.example.muzplayer.exoplayer.isPlaying
+import com.example.muzplayer.extensions.isPlaying
 import com.example.muzplayer.extensions.toSong
 import com.example.muzplayer.models.Song
 import com.example.muzplayer.viewmodels.MainViewModel

@@ -11,10 +11,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.muzplayer.exoplayer.MusicServiceConnection
-import com.example.muzplayer.exoplayer.isPlayEnabled
-import com.example.muzplayer.exoplayer.isPlaying
-import com.example.muzplayer.exoplayer.isPrepared
 import com.example.muzplayer.extensions.checkHasArt
+import com.example.muzplayer.extensions.isPlayEnabled
+import com.example.muzplayer.extensions.isPlaying
+import com.example.muzplayer.extensions.isPrepared
 import com.example.muzplayer.models.Song
 import com.example.muzplayer.utils.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.utils.Resource

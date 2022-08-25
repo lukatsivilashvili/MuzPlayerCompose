@@ -25,8 +25,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.muzplayer.MusicScreen
-import com.example.muzplayer.ui.theme.TabLight
-import com.example.muzplayer.ui.theme.OnTabLight
 import java.util.*
 
 @Composable
