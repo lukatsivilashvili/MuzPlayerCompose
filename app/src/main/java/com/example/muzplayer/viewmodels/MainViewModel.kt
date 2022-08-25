@@ -2,19 +2,17 @@ package com.example.muzplayer.viewmodels
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.muzplayer.exoplayer.MusicServiceConnection
-import com.example.muzplayer.exoplayer.isPlayEnabled
-import com.example.muzplayer.exoplayer.isPlaying
-import com.example.muzplayer.exoplayer.isPrepared
 import com.example.muzplayer.extensions.checkHasArt
+import com.example.muzplayer.extensions.isPlayEnabled
+import com.example.muzplayer.extensions.isPlaying
+import com.example.muzplayer.extensions.isPrepared
 import com.example.muzplayer.models.Song
 import com.example.muzplayer.utils.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.utils.Resource
@@ -40,7 +38,6 @@ class MainViewModel @Inject constructor(
         musicServiceConnection.subscribe(
             MEDIA_ROOT_ID,
             object : MediaBrowserCompat.SubscriptionCallback() {
-                @RequiresApi(Build.VERSION_CODES.Q)
                 override fun onChildrenLoaded(
                     parentId: String,
                     children: MutableList<MediaBrowserCompat.MediaItem>
@@ -48,11 +45,12 @@ class MainViewModel @Inject constructor(
                     super.onChildrenLoaded(parentId, children)
                     val items = children.map {
                         Song(
-                            it.mediaId!!,
-                            it.description.title.toString(),
-                            it.description.subtitle.toString(),
-                            it.description.mediaUri.toString(),
-                            it.description.iconUri.toString(),
+                            mediaId = it.mediaId!!,
+                            title = it.description.title.toString(),
+                            subtitle = it.description.subtitle.toString(),
+                            duration = it.description.description.toString().toLong(),
+                            songUrl = it.description.mediaUri.toString(),
+                            imageUrl = it.description.iconUri.toString(),
                             hasArt = it.description.mediaUri.checkHasArt(context)
                         )
                     }

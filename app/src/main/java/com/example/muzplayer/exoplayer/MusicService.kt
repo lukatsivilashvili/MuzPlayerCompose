@@ -14,8 +14,8 @@ import com.example.muzplayer.exoplayer.callbacks.MusicPlayerNotificationListener
 import com.example.muzplayer.utils.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.utils.Constants.NETWORK_FAILURE
 import com.example.muzplayer.utils.Constants.SERVICE_TAG
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -30,7 +30,7 @@ class MusicService : MediaBrowserServiceCompat() {
     lateinit var dataSourceFactory: DefaultDataSourceFactory
 
     @Inject
-    lateinit var exoPlayer: SimpleExoPlayer
+    lateinit var exoPlayer: ExoPlayer
 
     @Inject
     lateinit var musicSource: MusicSource
@@ -46,18 +46,9 @@ class MusicService : MediaBrowserServiceCompat() {
     var isForegroundService = false
 
     private var currentPlayingSong: MediaMetadataCompat? = null
-
     private var isPlayerInitialize = false
 
     private lateinit var musicPlayerListener: MusicPlayerEventListener
-
-    companion object {
-        private const val TAG = "MediaPlayerService"
-
-        var currentSongDuration = 0L
-            private set
-    }
-
     override fun onCreate() {
         super.onCreate()
         serviceScope.launch {
@@ -134,7 +125,7 @@ class MusicService : MediaBrowserServiceCompat() {
         clientPackageName: String,
         clientUid: Int,
         rootHints: Bundle?
-    ): BrowserRoot? {
+    ): BrowserRoot {
         return BrowserRoot(MEDIA_ROOT_ID, null)
     }
 

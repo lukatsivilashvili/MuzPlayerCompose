@@ -1,14 +1,11 @@
 package com.example.muzplayer.components
 
-import android.os.Build
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,9 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -29,12 +24,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.muzplayer.R
-import com.example.muzplayer.exoplayer.isPlaying
+import com.example.muzplayer.extensions.isPlaying
 import com.example.muzplayer.extensions.toSong
 import com.example.muzplayer.models.Song
 import com.example.muzplayer.viewmodels.MainViewModel
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun HomeBottomBar(
     modifier: Modifier = Modifier,
@@ -67,7 +61,7 @@ fun HomeBottomBar(
                                 }
                             },
                             onDrag = { change, dragAmount ->
-                                change.consumeAllChanges()
+                                change.consume()
                                 val (x, _) = dragAmount
                                 offsetX = x
                             }
@@ -75,9 +69,7 @@ fun HomeBottomBar(
 
                     }
                     .background(
-                        if (!isSystemInDarkTheme()) {
-                            Color.LightGray
-                        } else Color.DarkGray
+                        MaterialTheme.colors.primary
                     ),
             ) {
                 HomeBottomBarItem(

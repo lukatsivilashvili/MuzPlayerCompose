@@ -1,4 +1,4 @@
-package com.example.muzplayer
+package com.example.muzplayer.components
 
 import android.Manifest
 import android.annotation.SuppressLint

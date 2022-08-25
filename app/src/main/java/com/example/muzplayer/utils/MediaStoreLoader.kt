@@ -5,15 +5,13 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.annotation.RequiresApi
 import com.example.muzplayer.models.Song
 
-class MediaStoreLoader {
-    val musicItems = ArrayList<Song>()
+object MediaStoreLoader {
+    private val musicItems = ArrayList<Song>()
 
     private var initialized = false
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun initializeListIfNeeded(context: Context): ArrayList<Song> {
         val collection =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -45,12 +43,15 @@ class MediaStoreLoader {
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
             val artistColumn =
                 cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+            val durationColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
             val albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
 
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idColumn)
                 val title = cursor.getString(titleColumn)
                 val artist = cursor.getString(artistColumn)
+                val duration = cursor.getLong(durationColumn)
                 val albumId = cursor.getLong(albumIdColumn).toString()
                 val contentUri: Uri = ContentUris.withAppendedId(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -64,6 +65,7 @@ class MediaStoreLoader {
                         mediaId = id.toString(),
                         title = title,
                         subtitle = artist,
+                        duration = duration,
                         songUrl = contentUri.toString(),
                         imageUrl = artUri
                     )

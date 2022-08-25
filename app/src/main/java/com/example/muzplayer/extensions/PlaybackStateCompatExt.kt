@@ -1,4 +1,4 @@
-package com.example.muzplayer.exoplayer
+package com.example.muzplayer.extensions
 
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
