@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="5" by="lint Electric Eel | 2022.1.1 Canary 9">
+
+    <issue
+        id="RedundantLabel"
+        message="Redundant label can be removed">
+        <location
+            file="src\main\AndroidManifest.xml"
+            line="29"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 31">
+        <location
+            file="src\main\AndroidManifest.xml"
+            line="19"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `drawable`.">
+        <location
+            file="src\main\res\drawable-v24"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`.">
+        <location
+            file="src\main\res\mipmap-anydpi-v26"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This field leaks a context object">
+        <location
+            file="src\main\java\com\example\muzplayer\viewmodels\MainViewModel.kt"
+            line="27"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.purple_200` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="3"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.purple_500` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="4"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.teal_200` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="6"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.teal_700` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="7"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.black` appears to be unused">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="8"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_home` appears to be unused">
+        <location
+            file="src\main\res\drawable\ic_home.xml"
+            line="1"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive icon is missing a monochrome tag">
+        <location
+            file="src\main\res\mipmap-anydpi-v26\ic_launcher.xml"
+            line="2"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive roundIcon is missing a monochrome tag">
+        <location
+            file="src\main\res\mipmap-anydpi-v26\ic_launcher_round.xml"
+            line="2"/>
+    </issue>
+
+    <issue
+        id="IconExtension"
+        message="Misleading file extension; named `.jpg` but the file format is `png`">
+        <location
+            file="src\main\res\drawable-v24\ic_default_artwork.jpg"/>
+    </issue>
+
+</issues>
