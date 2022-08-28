@@ -7,6 +7,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.muzplayer.R
 import com.example.muzplayer.exoplayer.MusicServiceConnection
+import com.example.muzplayer.repository.MediaStoreRepo
+import com.example.muzplayer.repository.MediaStoreRepoImpl
+import com.example.muzplayer.utils.MediaStoreLoader
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,4 +43,11 @@ object AppModule {
     @Singleton
     @Provides
     fun provideContext(application: Application): Context = application.applicationContext
+
+    @Provides
+    fun provideMusicDatabase() = MediaStoreLoader
+    @Provides
+    @Singleton
+    fun addMediaStoreRepo(mediaStoreLoader: MediaStoreLoader, context: Context): MediaStoreRepo =
+        MediaStoreRepoImpl(mediaStoreLoader, context)
 }

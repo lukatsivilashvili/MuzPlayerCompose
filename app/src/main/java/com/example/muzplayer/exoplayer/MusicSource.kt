@@ -1,13 +1,12 @@
 package com.example.muzplayer.exoplayer
 
-import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import com.example.muzplayer.exoplayer.State.*
-import com.example.muzplayer.utils.MediaStoreLoader
+import com.example.muzplayer.repository.MediaStoreRepoImpl
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -17,16 +16,15 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MusicSource @Inject constructor(
-    private val musicLoader: MediaStoreLoader,
-    private val context: Context
-) {
+    private val musicLoader: MediaStoreRepoImpl
+    ) {
 
     var songs = emptyList<MediaMetadataCompat>()
 
-    suspend fun fetchMediaData() = withContext(Dispatchers.IO) {
+    suspend fun fetchMediaData() = withContext(Dispatchers.Main) {
         state = STATE_INITIALIZING
-        val allSongs = musicLoader.initializeListIfNeeded(context)
-        songs = allSongs.map { song ->
+        val allSongs = musicLoader.getAllSongs()
+        songs = allSongs.data!!.map { song ->
             Builder()
                 .putString(METADATA_KEY_TITLE, song.title)
                 .putString(METADATA_KEY_DISPLAY_TITLE, song.title)

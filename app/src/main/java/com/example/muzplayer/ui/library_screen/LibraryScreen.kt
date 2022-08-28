@@ -1,6 +1,7 @@
 package com.example.muzplayer.ui.library_screen
 
 
+import android.util.Log.d
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +35,7 @@ fun LibraryBody(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
         )
+        d("currentThread", Thread.currentThread().name)
     }
 }
 
