@@ -1,21 +1,20 @@
 package com.example.muzplayer.ui.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorPalette = darkColors(
+private val DarkColorSchemme = darkColorScheme(
     primary = TabDark,
-    primaryVariant = Purple700,
     secondary = TabDarkSecondary,
     onPrimary = OnTabDark
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorScheme = lightColorScheme(
     primary = TabLight,
-    primaryVariant = Purple700,
     secondary = TabLightSecondary,
     onPrimary = OnTabLight
 
@@ -30,17 +29,26 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun MuzPlayerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
+fun MuzPlayerTheme(
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    isDynamicColor: Boolean = true,
+    content: @Composable () -> Unit
+) {
+    val dynamicColor = isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val colors =  when {
+        dynamicColor && isDarkTheme -> {
+            dynamicDarkColorScheme(LocalContext.current)
+        }
+        dynamicColor && !isDarkTheme -> {
+            dynamicLightColorScheme(LocalContext.current)
+        }
+        isDarkTheme -> DarkColorSchemme
+        else -> LightColorScheme
     }
 
     MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
+        colorScheme = colors,
+        typography = typography,
         content = content
     )
 }
