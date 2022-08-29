@@ -1,15 +1,15 @@
 package com.example.muzplayer.viewmodels
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
-import android.util.Log.d
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.muzplayer.exoplayer.MusicServiceConnection
-import com.example.muzplayer.exoplayer.MusicSource
+import com.example.muzplayer.extensions.checkHasArt
 import com.example.muzplayer.extensions.isPlayEnabled
 import com.example.muzplayer.extensions.isPlaying
 import com.example.muzplayer.extensions.isPrepared
@@ -17,14 +17,12 @@ import com.example.muzplayer.models.Song
 import com.example.muzplayer.utils.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class BottomBarViewModel @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection,
-    private val musicSource: MusicSource
+    @SuppressLint("StaticFieldLeak") private val context: Context
 ) : ViewModel() {
 
     var mediaItems = mutableStateOf<Resource<List<Song>>>(Resource.Loading(null))
@@ -36,16 +34,40 @@ class MainViewModel @Inject constructor(
     val playbackState = musicServiceConnection.playbackState
 
     init {
-        loadLibraryContent()
+        mediaItems.value = (Resource.Loading(null))
+        musicServiceConnection.subscribe(
+            MEDIA_ROOT_ID,
+            object : MediaBrowserCompat.SubscriptionCallback() {
+                override fun onChildrenLoaded(
+                    parentId: String,
+                    children: MutableList<MediaBrowserCompat.MediaItem>
+                ) {
+                    super.onChildrenLoaded(parentId, children)
+                    val items = children.map {
+                        Song(
+                            mediaId = it.mediaId!!,
+                            title = it.description.title.toString(),
+                            subtitle = it.description.subtitle.toString(),
+                            duration = it.description.description.toString().toLong(),
+                            songUrl = it.description.mediaUri.toString(),
+                            imageUrl = it.description.iconUri.toString(),
+                            hasArt = it.description.mediaUri.checkHasArt(context)
+                        )
+                    }
+                    mediaItems.value = Resource.Success(items)
+                }
+            })
     }
 
-    private fun loadLibraryContent() = viewModelScope.launch(Dispatchers.IO){
-        fetchSongs()
+
+
+
+    fun skipToNextSong() {
+        musicServiceConnection.transportController.skipToNext()
     }
-    private suspend fun fetchSongs() {
-        val allSongs = musicSource.fetchSongData()
-        d("items", allSongs.toString())
-        mediaItems.value = Resource.Success(allSongs)
+
+    fun skipToPreviousSong() {
+        musicServiceConnection.transportController.skipToPrevious()
     }
 
     fun playOrToggleSong(mediaItem: Song, toggle: Boolean = false) {

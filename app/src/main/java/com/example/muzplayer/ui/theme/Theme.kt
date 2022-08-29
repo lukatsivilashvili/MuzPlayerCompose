@@ -7,7 +7,7 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorSchemme = darkColorScheme(
+private val DarkColorScheme = darkColorScheme(
     primary = TabDark,
     secondary = TabDarkSecondary,
     onPrimary = OnTabDark
@@ -41,7 +41,7 @@ fun MuzPlayerTheme(
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && isDynamicColor && !isDarkTheme -> {
             dynamicLightColorScheme(LocalContext.current)
         }
-        isDarkTheme -> DarkColorSchemme
+        isDarkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
 

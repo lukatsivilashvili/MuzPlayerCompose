@@ -2,14 +2,13 @@ package com.example.muzplayer.ui.library_screen
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,7 +26,24 @@ fun LibraryBody(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
     ) {
-        HomeContent(music = viewModel.mediaItems.value, viewModel = viewModel)
+        if (viewModel.mediaItems.value == Resource.Loading(null)) {
+            CircularProgressIndicator(
+                color = androidx.compose.material.MaterialTheme.colors.onBackground,
+                modifier = Modifier
+                    .size(100.dp)
+                    .fillMaxSize()
+
+                    .align(Alignment.Center)
+                    .padding(
+                        top = 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp
+                    )
+            )
+        } else {
+            HomeContent(music = viewModel.mediaItems.value, viewModel = viewModel)
+        }
     }
 }
 
@@ -42,8 +58,8 @@ fun HomeContent(
             .padding(bottom = 64.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
-        when(music){
-            is Resource.Success ->{
+        when (music) {
+            is Resource.Success -> {
                 items(music.data!!) { musicItem ->
                     MusicItem(music = musicItem, viewModel = viewModel)
                 }

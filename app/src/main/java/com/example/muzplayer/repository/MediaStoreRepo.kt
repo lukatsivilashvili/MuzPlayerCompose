@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 interface MediaStoreRepo {
     suspend fun getAllSongs(): Resource<List<Song>>
+    suspend fun getBottomBarSongs(): Resource<List<Song>>
 }
 
 class MediaStoreRepoImpl @Inject constructor(
@@ -19,11 +20,26 @@ class MediaStoreRepoImpl @Inject constructor(
 ) : MediaStoreRepo {
     override suspend fun getAllSongs(): Resource<List<Song>> =
         withContext(Dispatchers.IO) {
-            d("currentThread", Thread.currentThread().name)
             try {
                 val result = mediaStoreLoader.initializeListIfNeeded(context)
+                d("result", result.toString())
                 if (result.isNotEmpty()) {
                     Resource.Success(result)
+                } else {
+                    Resource.Error("Music couldn't be found")
+                }
+            } catch (e: Exception) {
+                Resource.Error("Error")
+            }
+        }
+
+    override suspend fun getBottomBarSongs(): Resource<List<Song>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val resultBottomBar = mediaStoreLoader.initializeListIfNeeded(context)
+                d("resultBottom", resultBottomBar.toString())
+                if (resultBottomBar.isNotEmpty()) {
+                    Resource.Success(resultBottomBar)
                 } else {
                     Resource.Error("Music couldn't be found")
                 }

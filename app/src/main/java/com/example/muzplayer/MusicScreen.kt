@@ -26,7 +26,7 @@ enum class MusicScreen(
                 Home.name -> Home
                 Library.name -> Library
                 Playlists.name -> Playlists
-                null -> Library
+                null -> Home
                 else -> throw IllegalArgumentException("Route $route is not recognized.")
             }
     }
