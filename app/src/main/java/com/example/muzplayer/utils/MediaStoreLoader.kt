@@ -3,7 +3,6 @@ package com.example.muzplayer.utils
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import com.example.muzplayer.models.Song
 import kotlinx.coroutines.Dispatchers
@@ -16,12 +15,7 @@ object MediaStoreLoader {
 
     suspend fun initializeListIfNeeded(context: Context): ArrayList<Song> {
         withContext(Dispatchers.IO) {
-            val collection =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
-                } else {
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                }
+            val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
             val selection = MediaStore.Audio.Media.IS_MUSIC + " !=0"
             val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
             val projection = arrayOf(

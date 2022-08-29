@@ -34,12 +34,11 @@ fun MuzPlayerTheme(
     isDynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val dynamicColor = isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val colors =  when {
-        dynamicColor && isDarkTheme -> {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && isDynamicColor && isDarkTheme -> {
             dynamicDarkColorScheme(LocalContext.current)
         }
-        dynamicColor && !isDarkTheme -> {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && isDynamicColor && !isDarkTheme -> {
             dynamicLightColorScheme(LocalContext.current)
         }
         isDarkTheme -> DarkColorSchemme
