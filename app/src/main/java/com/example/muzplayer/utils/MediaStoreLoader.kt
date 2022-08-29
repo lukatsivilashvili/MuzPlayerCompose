@@ -9,11 +9,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object MediaStoreLoader {
-    private val musicItems = ArrayList<Song>()
+    private val musicItems = mutableListOf<Song>()
 
     private var initialized = false
 
-    suspend fun initializeListIfNeeded(context: Context): ArrayList<Song> {
+    suspend fun initializeListIfNeeded(context: Context): List<Song> {
+        musicItems.clear()
         withContext(Dispatchers.IO) {
             val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
             val selection = MediaStore.Audio.Media.IS_MUSIC + " !=0"

@@ -5,7 +5,9 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
+import android.util.Log.d
 import com.example.muzplayer.exoplayer.State.*
+import com.example.muzplayer.models.Song
 import com.example.muzplayer.repository.MediaStoreRepoImpl
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
@@ -17,13 +19,14 @@ import javax.inject.Inject
 
 class MusicSource @Inject constructor(
     private val musicLoader: MediaStoreRepoImpl
-    ) {
+) {
 
     var songs = emptyList<MediaMetadataCompat>()
+    var realSongsList: List<Song> = listOf()
 
     suspend fun fetchMediaData() = withContext(Dispatchers.Main) {
         state = STATE_INITIALIZING
-        val allSongs = musicLoader.getAllSongs()
+        val allSongs = musicLoader.getBottomBarSongs()
         songs = allSongs.data!!.map { song ->
             Builder()
                 .putString(METADATA_KEY_TITLE, song.title)
@@ -39,6 +42,17 @@ class MusicSource @Inject constructor(
                 .build()
         }
         state = STATE_INITIALIZED
+    }
+
+    suspend fun fetchSongData(): List<Song> {
+        withContext(Dispatchers.Main) {
+            state = STATE_INITIALIZING
+            val allSongs = musicLoader.getAllSongs()
+            realSongsList = allSongs.data ?: emptyList()
+            state = STATE_INITIALIZED
+            d("realItems", allSongs.data.toString())
+        }
+        return realSongsList
     }
 
     fun asMediaSource(dataSourceFactory: DefaultDataSourceFactory): ConcatenatingMediaSource {

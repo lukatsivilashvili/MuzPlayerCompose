@@ -1,10 +1,10 @@
 package com.example.muzplayer
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,6 +24,7 @@ import com.example.muzplayer.ui.home_screen.HomeBody
 import com.example.muzplayer.ui.library_screen.LibraryBody
 import com.example.muzplayer.ui.playlist_screen.PlaylistBody
 import com.example.muzplayer.ui.theme.MuzPlayerTheme
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,37 +33,42 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MuzPlayerTheme {
-                val allScreens = MusicScreen.values().toList()
-                val navController = rememberNavController()
-                val backstackEntry = navController.currentBackStackEntryAsState()
-                val currentScreen = MusicScreen.fromRoute(backstackEntry.value?.destination?.route)
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colors.primary),
-                ) {
-                    Scaffold(
-                        topBar = {
-                            MusicTabRow(
-                                allScreens = allScreens,
-                                onTabSelected = { screen ->
-                                    navController.navigate(screen.name)
-                                },
-                                currentScreen = currentScreen
-                            )
-                        }
-                    ) { innerPadding ->
-                        MusicNavHost(navController, modifier = Modifier.padding(innerPadding))
-                    }
-                    HomeBottomBar(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                    )
-                    Log.d("currentThread", Thread.currentThread().name)
-                }
+                setStatusColor()
+                MainActivityScreen()
             }
         }
+    }
+}
+
+@Composable
+fun MainActivityScreen() {
+    val allScreens = MusicScreen.values().toList()
+    val navController = rememberNavController()
+    val backstackEntry = navController.currentBackStackEntryAsState()
+    val currentScreen = MusicScreen.fromRoute(backstackEntry.value?.destination?.route)
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.primary),
+    ) {
+        Scaffold(
+            topBar = {
+                MusicTabRow(
+                    allScreens = allScreens,
+                    onTabSelected = { screen ->
+                        navController.navigate(screen.name)
+                    },
+                    currentScreen = currentScreen
+                )
+            }
+        ) { innerPadding ->
+            MusicNavHost(navController, modifier = Modifier.padding(innerPadding))
+        }
+        HomeBottomBar(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+        )
     }
 }
 
@@ -84,4 +90,15 @@ fun MusicNavHost(navController: NavHostController, modifier: Modifier = Modifier
             PlaylistBody()
         }
     }
+}
+@Composable
+private fun setStatusColor(){
+    val systemUiController = rememberSystemUiController()
+    val primaryColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+    val darkTheme = isSystemInDarkTheme()
+
+    systemUiController.setStatusBarColor(
+        color = primaryColor,
+        darkIcons = !darkTheme
+    )
 }
