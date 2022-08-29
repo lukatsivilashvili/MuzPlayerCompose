@@ -7,9 +7,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -69,7 +69,7 @@ fun HomeBottomBar(
 
                     }
                     .background(
-                        MaterialTheme.colors.primary
+                        MaterialTheme.colorScheme.secondaryContainer
                     ),
             ) {
                 HomeBottomBarItem(
@@ -114,16 +114,16 @@ fun HomeBottomBarItem(
             ) {
                 Text(
                     song.title,
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.onBackground,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
 
                 Text(
                     song.subtitle,
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.onBackground,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier

@@ -70,6 +70,12 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation("io.coil-kt:coil-compose:2.1.0")
 
+    //Material
+    // Required minimum version: 1.5.0
+    implementation 'com.google.android.material:material:1.6.1'
+// For use of Material3 in Compose
+    implementation 'androidx.compose.material3:material3:1.0.0-beta01'
+
     // ExoPlayer
     api "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
     api "com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion"
