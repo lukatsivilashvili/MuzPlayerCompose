@@ -28,7 +28,7 @@ class MusicNotificationManger(
 
     private val notificationManager: PlayerNotificationManager
     private val serviceJob = SupervisorJob()
-    private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
+    private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
 
     init {
         val channelId =

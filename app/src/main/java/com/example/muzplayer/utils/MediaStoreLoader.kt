@@ -4,6 +4,7 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import com.example.muzplayer.extensions.checkHasArt
 import com.example.muzplayer.models.Song
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,7 +14,7 @@ object MediaStoreLoader {
 
     private var initialized = false
 
-    suspend fun initializeListIfNeeded(context: Context): List<Song> {
+    suspend fun initializeListIfNeeded(context: Context): Resource<List<Song>> {
         musicItems.clear()
         withContext(Dispatchers.IO) {
             val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
@@ -65,13 +66,17 @@ object MediaStoreLoader {
                             subtitle = artist,
                             duration = duration,
                             songUrl = contentUri.toString(),
-                            imageUrl = artUri
+                            imageUrl = artUri,
+                            hasArt = contentUri.checkHasArt(context)
                         )
                     )
                 }
             }
             initialized = true
         }
-        return musicItems
+        return when {
+            musicItems.isEmpty() -> Resource.Error("Couldn't fetch songs")
+            else -> Resource.Success(musicItems)
+        }
     }
 }
