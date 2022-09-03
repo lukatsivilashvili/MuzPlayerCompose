@@ -59,7 +59,6 @@ fun HomeContent(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 64.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
         when (music) {

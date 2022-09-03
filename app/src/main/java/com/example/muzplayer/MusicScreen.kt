@@ -4,20 +4,27 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Audiotrack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlaylistPlay
+import androidx.compose.material.icons.outlined.Audiotrack
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.PlaylistPlay
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class MusicScreen(
-    val icon: ImageVector,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
 ) {
     Home(
-        icon = Icons.Filled.Home,
+        selectedIcon = Icons.Filled.Home,
+        unselectedIcon = Icons.Outlined.Home
     ),
     Library(
-        icon = Icons.Filled.Audiotrack,
+        selectedIcon = Icons.Filled.Audiotrack,
+        unselectedIcon = Icons.Outlined.Audiotrack
 
     ),
     Playlists(
-        icon = Icons.Filled.PlaylistPlay,
+        selectedIcon = Icons.Filled.PlaylistPlay,
+        unselectedIcon = Icons.Outlined.PlaylistPlay
     );
 
     companion object {
