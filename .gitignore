@@ -16,3 +16,4 @@ local.properties
 /.idea/deploymentTargetDropDown.xml
 /my_signing_keystore_base64_encoded.txt
 /app/keystore/upload-keystore.jks
+/keystore.properties
