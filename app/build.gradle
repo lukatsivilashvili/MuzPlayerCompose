@@ -39,7 +39,7 @@ android {
                 keystoreFile.renameTo("keystore/upload-keystore.jks")
             }
 
-            if (file('app/upload-keystore-ci.jks').exists()){
+            if (file('keystore/upload-keystore-ci.jks').exists()){
                 storeFile = file("keystore/upload-keystore.jks")
                 storePassword System.getenv("SIGNING_STORE_PASSWORD")
                 keyAlias System.getenv("SIGNING_KEY_ALIAS")
