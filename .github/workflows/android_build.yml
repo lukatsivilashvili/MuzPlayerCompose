@@ -2,20 +2,18 @@ name: Android Build
 
 on: pull_request
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       - name: Decode Keystore
-        env:
-          ENCODED_STRING: ${{ secrets.KEYSTORE }}
-          run:
-          |
-          TMP_KEYSTORE_FILE_PATH="${RUNNER_TEMP}"/keystore
-          mkdir "${TMP_KEYSTORE_FILE_PATH}"
-          echo $ENCODED_STRING | base64 -di > "${TMP_KEYSTORE_FILE_PATH}"/upload-keystore.jks
-
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: 'keystore/upload-keystore.jks'
+          encodedString: ${{ secrets.KEYSTORE }}
+      - uses: actions/checkout@v3
       - name: Set Up JDK
         uses: actions/setup-java@v3
         with:
@@ -23,11 +21,9 @@ jobs:
             java-version: 11
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-      - name: Run Tests
-        run: ./gradlew test
       - name: build prod
-        run: ./gradlew build
+        run: ./gradlew app:build
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-            SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
