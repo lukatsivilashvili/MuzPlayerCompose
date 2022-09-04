@@ -39,16 +39,16 @@ android {
                 keystoreFile.renameTo("keystore/upload-keystore.jks")
             }
 
-            if (file('../upload-keystore.jks').exists()){
-                keyAlias keystoreProperties['releaseKeyAlias']
-                keyPassword keystoreProperties['releaseKeyPassword']
-                storeFile file(keystoreProperties['releaseKeyStore'])
-                storePassword keystoreProperties['releaseStorePassword']
-            }else{
+            if (file('../upload-keystore-ci.jks').exists()){
                 storeFile = file("keystore/upload-keystore.jks")
                 storePassword System.getenv("SIGNING_STORE_PASSWORD")
                 keyAlias System.getenv("SIGNING_KEY_ALIAS")
                 keyPassword System.getenv("SIGNING_KEY_PASSWORD")
+            }else{
+                storeFile file(keystoreProperties['releaseKeyStore'])
+                storePassword keystoreProperties['releaseStorePassword']
+                keyAlias keystoreProperties['releaseKeyAlias']
+                keyPassword keystoreProperties['releaseKeyPassword']
             }
 
         }
