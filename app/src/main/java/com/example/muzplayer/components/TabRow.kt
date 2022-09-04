@@ -43,7 +43,7 @@ fun MusicTabRow(
             allScreens.forEach { screen ->
                 MusicTab(
                     text = screen.name,
-                    icon = screen.icon,
+                    icon = screen.selectedIcon,
                     onSelected = { onTabSelected(screen) },
                     selected = currentScreen == screen
                 )

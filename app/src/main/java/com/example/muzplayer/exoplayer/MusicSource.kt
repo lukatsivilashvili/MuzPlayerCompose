@@ -12,7 +12,7 @@ import com.example.muzplayer.repository.MediaStoreRepoImpl
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class MusicSource @Inject constructor(
 
     suspend fun fetchMediaData() = withContext(Dispatchers.Main) {
         state = STATE_INITIALIZING
-        val allSongs = musicLoader.getBottomBarSongs()
+        val allSongs = musicLoader.getAllSongs()
         songs = allSongs.data!!.map { song ->
             Builder()
                 .putString(METADATA_KEY_TITLE, song.title)
@@ -45,19 +45,17 @@ class MusicSource @Inject constructor(
     }
 
     suspend fun fetchSongData(): List<Song> {
-        withContext(Dispatchers.Main) {
             state = STATE_INITIALIZING
             val allSongs = musicLoader.getAllSongs()
             realSongsList = allSongs.data ?: emptyList()
             state = STATE_INITIALIZED
-            d("realItems", allSongs.data.toString())
-        }
         return realSongsList
     }
 
-    fun asMediaSource(dataSourceFactory: DefaultDataSourceFactory): ConcatenatingMediaSource {
+    fun asMediaSource(dataSourceFactory: DefaultDataSource.Factory): ConcatenatingMediaSource {
         val concatenatingMediaSource = ConcatenatingMediaSource()
         songs.forEach { song ->
+            d("myRes", song.description.toString())
             val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(MediaItem.fromUri(song.getString(METADATA_KEY_MEDIA_URI)))
             concatenatingMediaSource.addMediaSource(mediaSource)

@@ -2,23 +2,31 @@ name: Android Build
 
 on: pull_request
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: 'keystore/upload-keystore.jks'
+          encodedString: ${{ secrets.KEYSTORE }}
       - uses: actions/checkout@v3
-
       - name: Set Up JDK
         uses: actions/setup-java@v3
         with:
           distribution: corretto
           java-version: 11
-
-      - name: Enable Gradle
-        run: chmod +x gradlew
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
 
       - name: Run Tests
         run: ./gradlew test
-
-      - name: Build Project
-        run: ./gradlew build
+#      - name: build prod
+#        run: ./gradlew app:build
+#        env:
+#          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+#          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+#          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}

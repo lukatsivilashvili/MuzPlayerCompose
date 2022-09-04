@@ -6,6 +6,8 @@ import android.util.Log.d
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.muzplayer.exoplayer.MusicServiceConnection
@@ -27,13 +29,14 @@ class MainViewModel @Inject constructor(
     private val musicSource: MusicSource
 ) : ViewModel() {
 
-    var mediaItems = mutableStateOf<Resource<List<Song>>>(Resource.Loading(null))
+    private var _mediaItems = MutableLiveData<Resource<List<Song>>>()
+    var mediaItems: LiveData<Resource<List<Song>>> = _mediaItems
 
     var showPlayerFullScreen by mutableStateOf(false)
 
-    val currentPlayingSong = musicServiceConnection.currentPlayingSong
+    private val currentPlayingSong = musicServiceConnection.currentPlayingSong
 
-    val playbackState = musicServiceConnection.playbackState
+    private val playbackState = musicServiceConnection.playbackState
 
     init {
         loadLibraryContent()
@@ -45,7 +48,7 @@ class MainViewModel @Inject constructor(
     private suspend fun fetchSongs() {
         val allSongs = musicSource.fetchSongData()
         d("items", allSongs.toString())
-        mediaItems.value = Resource.Success(allSongs)
+        _mediaItems.postValue(Resource.Success(allSongs))
     }
 
     fun playOrToggleSong(mediaItem: Song, toggle: Boolean = false) {

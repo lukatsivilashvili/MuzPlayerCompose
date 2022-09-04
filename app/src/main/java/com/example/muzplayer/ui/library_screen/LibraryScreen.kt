@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ fun LibraryBody(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
     ) {
+        val songList = viewModel.mediaItems.observeAsState().value
         if (viewModel.mediaItems.value == Resource.Loading(null)) {
             CircularProgressIndicator(
                 color = androidx.compose.material.MaterialTheme.colors.onBackground,
@@ -42,7 +44,9 @@ fun LibraryBody(
                     )
             )
         } else {
-            HomeContent(music = viewModel.mediaItems.value, viewModel = viewModel)
+            if (songList != null) {
+                HomeContent(music = songList, viewModel = viewModel)
+            }
         }
     }
 }
@@ -55,7 +59,6 @@ fun HomeContent(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 64.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
         when (music) {

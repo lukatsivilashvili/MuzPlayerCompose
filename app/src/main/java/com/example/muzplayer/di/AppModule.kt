@@ -10,6 +10,7 @@ import com.example.muzplayer.exoplayer.MusicServiceConnection
 import com.example.muzplayer.repository.MediaStoreRepo
 import com.example.muzplayer.repository.MediaStoreRepoImpl
 import com.example.muzplayer.utils.MediaStoreLoader
+import com.google.android.exoplayer2.upstream.DefaultDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,4 +51,7 @@ object AppModule {
     @Singleton
     fun addMediaStoreRepo(mediaStoreLoader: MediaStoreLoader, context: Context): MediaStoreRepo =
         MediaStoreRepoImpl(mediaStoreLoader, context)
+
+    @Provides
+    fun providesDefaultDataSourceFactory(context: Context) = DefaultDataSource.Factory(context)
 }
