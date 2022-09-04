@@ -21,6 +21,9 @@ jobs:
           java-version: 11
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
+      - name: Run Tests
+        run: ./gradlew test
       - name: build prod
         run: ./gradlew app:build
         env:
