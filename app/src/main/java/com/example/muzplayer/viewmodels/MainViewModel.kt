@@ -2,35 +2,34 @@ package com.example.muzplayer.viewmodels
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
-import android.util.Log.d
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.muzplayer.exoplayer.MusicServiceConnection
-import com.example.muzplayer.exoplayer.MusicSource
 import com.example.muzplayer.extensions.isPlayEnabled
 import com.example.muzplayer.extensions.isPlaying
 import com.example.muzplayer.extensions.isPrepared
 import com.example.muzplayer.models.Song
+import com.example.muzplayer.models.SongState
+import com.example.muzplayer.repository.GetSongsUseCase
 import com.example.muzplayer.utils.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection,
-    private val musicSource: MusicSource
+    private val getSongsUseCase: GetSongsUseCase
 ) : ViewModel() {
 
-    private var _mediaItems = MutableLiveData<Resource<List<Song>>>()
-    var mediaItems: LiveData<Resource<List<Song>>> = _mediaItems
+    private var _songsState = mutableStateOf(SongState())
+    val state: State<SongState> = _songsState
 
     var showPlayerFullScreen by mutableStateOf(false)
 
@@ -39,16 +38,26 @@ class MainViewModel @Inject constructor(
     private val playbackState = musicServiceConnection.playbackState
 
     init {
-        loadLibraryContent()
-    }
-
-    private fun loadLibraryContent() = viewModelScope.launch(Dispatchers.IO){
         fetchSongs()
     }
-    private suspend fun fetchSongs() {
-        val allSongs = musicSource.fetchSongData()
-        d("items", allSongs.toString())
-        _mediaItems.postValue(Resource.Success(allSongs))
+
+    private fun fetchSongs() {
+        getSongsUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _songsState.value = SongState(songs = result.data ?: emptyList())
+                }
+
+                is Resource.Error -> {
+                    _songsState.value =
+                        SongState(error = result.message ?: "An unexpected error occurred")
+                }
+
+                is Resource.Loading -> {
+                    _songsState.value = SongState(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     fun playOrToggleSong(mediaItem: Song, toggle: Boolean = false) {

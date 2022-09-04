@@ -14,7 +14,7 @@ object MediaStoreLoader {
 
     private var initialized = false
 
-    suspend fun initializeListIfNeeded(context: Context): Resource<List<Song>> {
+    suspend fun initializeListIfNeeded(context: Context): List<Song> {
         musicItems.clear()
         withContext(Dispatchers.IO) {
             val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
@@ -75,8 +75,8 @@ object MediaStoreLoader {
             initialized = true
         }
         return when {
-            musicItems.isEmpty() -> Resource.Error("Couldn't fetch songs")
-            else -> Resource.Success(musicItems)
+            musicItems.isEmpty() -> emptyList()
+            else -> musicItems
         }
     }
 }
