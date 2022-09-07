@@ -15,9 +15,9 @@ import com.example.muzplayer.extensions.isPlaying
 import com.example.muzplayer.extensions.isPrepared
 import com.example.muzplayer.models.Song
 import com.example.muzplayer.utils.Constants.MEDIA_ROOT_ID
-import com.example.muzplayer.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +27,7 @@ class MainViewModel @Inject constructor(
     private val musicSource: MusicSource
 ) : ViewModel() {
 
-    var mediaItems = mutableStateOf<Resource<List<Song>>>(Resource.Loading(null))
+    var mediaItems = MutableStateFlow<List<Song>>(emptyList())
 
     var showPlayerFullScreen by mutableStateOf(false)
 
@@ -45,7 +45,7 @@ class MainViewModel @Inject constructor(
     private suspend fun fetchSongs() {
         val allSongs = musicSource.fetchSongData()
         Log.d("items", allSongs.toString())
-        mediaItems.value = Resource.Success(allSongs)
+        mediaItems.value = allSongs
     }
 
     fun playOrToggleSong(mediaItem: Song, toggle: Boolean = false) {

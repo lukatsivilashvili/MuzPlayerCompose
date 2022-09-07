@@ -9,29 +9,30 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.muzplayer.components.MusicItem
 import com.example.muzplayer.models.Song
-import com.example.muzplayer.utils.Resource
 import com.example.muzplayer.viewmodels.MainViewModel
 
 @Composable
 fun LibraryBody(
     viewModel: MainViewModel = hiltViewModel()
 ) {
+    val songs = viewModel.mediaItems.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
     ) {
-        HomeContent(music = viewModel.mediaItems.value, viewModel = viewModel)
+        HomeContent(music = songs.value, viewModel = viewModel)
     }
 }
 
 @Composable
 fun HomeContent(
-    music: Resource<List<Song>>,
+    music: List<Song>,
     viewModel: MainViewModel
 ) {
     LazyColumn(
@@ -39,13 +40,8 @@ fun HomeContent(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        when (music) {
-            is Resource.Success -> {
-                items(music.data!!) { musicItem ->
-                    MusicItem(music = musicItem, viewModel = viewModel)
-                }
-            }
-            else -> {}
+        items(music) { musicItem ->
+            MusicItem(music = musicItem, viewModel = viewModel)
         }
 
     }
