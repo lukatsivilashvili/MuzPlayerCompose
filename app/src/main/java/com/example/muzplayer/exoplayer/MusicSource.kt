@@ -18,14 +18,14 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MusicSource @Inject constructor(
-    private val musicLoader: MediaStoreRepoImpl
+    private val repository: MediaStoreRepoImpl
 ) {
 
     var songs = emptyList<MediaMetadataCompat>()
 
     suspend fun fetchMediaData() = withContext(Dispatchers.Main) {
         state = STATE_INITIALIZING
-        val allSongs = musicLoader.getAllSongs()
+        val allSongs = repository.getAllSongs()
         songs = allSongs.map { song ->
             Builder()
                 .putString(METADATA_KEY_TITLE, song.title)
@@ -45,7 +45,7 @@ class MusicSource @Inject constructor(
 
     suspend fun fetchSongData(): List<Song> {
             state = STATE_INITIALIZING
-            val allSongs = musicLoader.getAllSongs()
+            val allSongs = repository.getAllSongs()
             state = STATE_INITIALIZED
         return allSongs
     }

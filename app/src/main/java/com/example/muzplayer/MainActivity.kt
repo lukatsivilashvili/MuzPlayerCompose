@@ -70,7 +70,7 @@ fun MainActivityScreen() {
                 .fillMaxSize()
             ) {
                 MusicNavHost(navController, modifier = Modifier.padding(bottom = 64.dp))
-                HomeBottomBar(modifier = Modifier.align(Alignment.BottomCenter),)
+                HomeBottomBar(modifier = Modifier.align(Alignment.BottomCenter))
             }
         }
     }
