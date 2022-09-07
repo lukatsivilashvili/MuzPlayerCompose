@@ -2,12 +2,10 @@ package com.example.muzplayer.viewmodels
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
-import android.util.Log.d
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.muzplayer.exoplayer.MusicServiceConnection
@@ -17,9 +15,9 @@ import com.example.muzplayer.extensions.isPlaying
 import com.example.muzplayer.extensions.isPrepared
 import com.example.muzplayer.models.Song
 import com.example.muzplayer.utils.Constants.MEDIA_ROOT_ID
-import com.example.muzplayer.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,14 +27,13 @@ class MainViewModel @Inject constructor(
     private val musicSource: MusicSource
 ) : ViewModel() {
 
-    private var _mediaItems = MutableLiveData<Resource<List<Song>>>()
-    var mediaItems: LiveData<Resource<List<Song>>> = _mediaItems
+    var mediaItems = MutableStateFlow<List<Song>>(emptyList())
 
     var showPlayerFullScreen by mutableStateOf(false)
 
-    private val currentPlayingSong = musicServiceConnection.currentPlayingSong
+    val currentPlayingSong = musicServiceConnection.currentPlayingSong
 
-    private val playbackState = musicServiceConnection.playbackState
+    val playbackState = musicServiceConnection.playbackState
 
     init {
         loadLibraryContent()
@@ -47,8 +44,8 @@ class MainViewModel @Inject constructor(
     }
     private suspend fun fetchSongs() {
         val allSongs = musicSource.fetchSongData()
-        d("items", allSongs.toString())
-        _mediaItems.postValue(Resource.Success(allSongs))
+        Log.d("items", allSongs.toString())
+        mediaItems.value = allSongs
     }
 
     fun playOrToggleSong(mediaItem: Song, toggle: Boolean = false) {
