@@ -4,7 +4,6 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import com.example.muzplayer.extensions.checkHasArt
 import com.example.muzplayer.models.Song
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -66,17 +65,13 @@ object MediaStoreLoader {
                             subtitle = artist,
                             duration = duration,
                             songUrl = contentUri.toString(),
-                            imageUrl = artUri,
-                            hasArt = contentUri.checkHasArt(context)
+                            imageUrl = artUri
                         )
                     )
                 }
             }
             initialized = true
         }
-        return when {
-            musicItems.isEmpty() -> emptyList()
-            else -> musicItems
-        }
+        return musicItems
     }
 }

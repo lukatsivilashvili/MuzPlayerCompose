@@ -7,6 +7,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import android.util.Log.d
 import com.example.muzplayer.exoplayer.State.*
+import com.example.muzplayer.models.Song
 import com.example.muzplayer.repository.MediaStoreRepoImpl
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
@@ -40,6 +41,13 @@ class MusicSource @Inject constructor(
                 .build()
         }
         state = STATE_INITIALIZED
+    }
+
+    suspend fun fetchSongData(): List<Song> {
+            state = STATE_INITIALIZING
+            val allSongs = musicLoader.getAllSongs()
+            state = STATE_INITIALIZED
+        return allSongs
     }
 
     fun asMediaSource(dataSourceFactory: DefaultDataSource.Factory): ConcatenatingMediaSource {
