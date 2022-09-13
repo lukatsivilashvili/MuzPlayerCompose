@@ -1,9 +1,9 @@
 package com.example.muzplayer.di
 
 import android.content.Context
-import com.example.muzplayer.repository.MediaStoreRepo
-import com.example.muzplayer.repository.MediaStoreRepoImpl
-import com.example.muzplayer.utils.MediaStoreLoader
+import com.example.muzplayer.domain.repository.MediaStoreRepo
+import com.example.muzplayer.domain.repository.MediaStoreRepoImpl
+import com.example.muzplayer.data.MediaStoreLoader
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes

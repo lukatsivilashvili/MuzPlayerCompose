@@ -6,10 +6,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.muzplayer.R
-import com.example.muzplayer.exoplayer.MusicServiceConnection
-import com.example.muzplayer.repository.MediaStoreRepo
-import com.example.muzplayer.repository.MediaStoreRepoImpl
-import com.example.muzplayer.utils.MediaStoreLoader
+import com.example.muzplayer.domain.exoplayer.MusicServiceConnection
+import com.example.muzplayer.domain.repository.MediaStoreRepo
+import com.example.muzplayer.domain.repository.MediaStoreRepoImpl
+import com.example.muzplayer.data.MediaStoreLoader
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import dagger.Module
 import dagger.Provides
