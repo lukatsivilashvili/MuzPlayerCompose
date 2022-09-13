@@ -1,9 +1,9 @@
 package com.example.muzplayer.di
 
 import android.content.Context
-import com.example.muzplayer.domain.repository.MediaStoreRepo
-import com.example.muzplayer.domain.repository.MediaStoreRepoImpl
 import com.example.muzplayer.data.MediaStoreLoader
+import com.example.muzplayer.data.repository.MediaStoreRepositoryImpl
+import com.example.muzplayer.domain.repository.MediaStoreRepo
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
@@ -26,7 +26,7 @@ object ServiceModule {
     @Provides
     @Singleton
     fun addMediaStoreRepo(mediaStoreLoader: MediaStoreLoader, context: Context): MediaStoreRepo =
-        MediaStoreRepoImpl(mediaStoreLoader, context)
+        MediaStoreRepositoryImpl(mediaStoreLoader, context)
 
     @ServiceScoped
     @Provides
