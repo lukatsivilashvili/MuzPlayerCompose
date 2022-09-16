@@ -1,7 +1,6 @@
-package com.example.muzplayer.components
+package com.example.muzplayer.presentation.ui.bottom_bar
 
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,7 +28,6 @@ import com.example.muzplayer.common.extensions.isPlaying
 import com.example.muzplayer.common.extensions.toSong
 import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.components.CustomCoilImage
-import com.example.muzplayer.presentation.ui.bottom_bar.BottomBarViewModel
 
 @Composable
 fun HomeBottomBar(
@@ -98,7 +96,6 @@ fun HomeBottomBarItem(
             .height(64.dp)
             .clickable(onClick = {
                 viewModel.showPlayerFullScreen = true
-                Log.d("myLog", viewModel.showPlayerFullScreen.toString())
             })
 
     ) {
@@ -136,11 +133,7 @@ fun HomeBottomBarItem(
 
                 )
             }
-            val icon = if (playbackStateCompat?.isPlaying == false) {
-                R.drawable.ic_round_play_arrow
-            } else {
-                R.drawable.ic_round_pause
-            }
+            val icon = if (playbackStateCompat?.isPlaying == false) R.drawable.ic_round_play_arrow else R.drawable.ic_round_pause
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(icon)

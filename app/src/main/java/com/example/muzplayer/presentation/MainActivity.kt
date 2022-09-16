@@ -2,6 +2,7 @@ package com.example.muzplayer.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -20,7 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.muzplayer.common.MusicScreen
-import com.example.muzplayer.components.HomeBottomBar
+import com.example.muzplayer.presentation.ui.bottom_bar.HomeBottomBar
 import com.example.muzplayer.presentation.components.BottomNavigationBar
 import com.example.muzplayer.presentation.ui.home_screen.HomeBody
 import com.example.muzplayer.presentation.ui.library_screen.LibraryBody
@@ -37,14 +38,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             MuzPlayerTheme {
                 setStatusColor()
-                MainActivityScreen()
+                MainActivityScreen(backPressedDispatcher = onBackPressedDispatcher)
             }
         }
     }
 }
 
 @Composable
-fun MainActivityScreen() {
+fun MainActivityScreen(
+    backPressedDispatcher: OnBackPressedDispatcher
+) {
     val allScreens = MusicScreen.values().toList()
     val navController = rememberNavController()
     val backstackEntry = navController.currentBackStackEntryAsState()
@@ -75,7 +78,7 @@ fun MainActivityScreen() {
                 HomeBottomBar(modifier = Modifier.align(Alignment.BottomCenter))
             }
         }
-        PlayerScreen()
+        PlayerScreen(backPressedDispatcher = backPressedDispatcher)
     }
 }
 

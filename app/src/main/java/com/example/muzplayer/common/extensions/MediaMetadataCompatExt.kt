@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v4.media.MediaMetadataCompat
 import com.example.muzplayer.domain.models.Song
 
-fun MediaMetadataCompat.toSong(context: Context): Song? {
+fun MediaMetadataCompat.toSong(context: Context? = null): Song? {
     return description?.let {
         Song(
             mediaId = it.mediaId ?: "",
@@ -13,7 +13,7 @@ fun MediaMetadataCompat.toSong(context: Context): Song? {
             duration = it.description.toString().toLong(),
             songUrl = it.mediaUri.toString(),
             imageUrl = it.iconUri.toString(),
-            hasArt = it.mediaUri.checkHasArt(context)
+//            hasArt = it.mediaUri.checkHasArt(context)
         )
     }
 }
