@@ -1,5 +1,8 @@
 package com.example.muzplayer.presentation.ui.player_screen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -18,6 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.muzplayer.presentation.components.CustomCoilImage
+import com.example.muzplayer.presentation.ui.bottom_bar.BottomBarViewModel
 
 /**
  * Created by ltsivilashvili on 14.09.22
@@ -25,10 +31,17 @@ import androidx.compose.ui.unit.dp
 
 @Preview(name = "PIXEL_3_XL", device = Devices.PIXEL_3_XL)
 @Composable
-fun PlayerScreen() {
-    Column(
-
-    ) {
+fun PlayerScreen(
+    bottomBarViewModel: BottomBarViewModel = hiltViewModel()
+) {
+    AnimatedVisibility(
+        visible = bottomBarViewModel.showPlayerFullScreen,
+        enter = slideInVertically(
+            initialOffsetY = { it }
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { it }
+        )) {
         PlayerScreenBody()
     }
 }
@@ -42,13 +55,30 @@ fun PlayerScreenBody(
         modifier = modifier
             .fillMaxSize()
             .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
-            .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+            .padding(start = 16.dp, end = 16.dp, bottom = 64.dp),
         verticalArrangement = Arrangement.Bottom
     ) {
+        PlayerScreenImage()
         PlayerScreenNames()
         PlayerSlider()
         PlayerControls()
     }
+}
+
+@Preview(group = "comps")
+@Composable
+fun PlayerScreenImage(
+    modifier: Modifier = Modifier
+) {
+    CustomCoilImage(
+        uri = null,
+        compSize = 350.dp,
+        modifier = modifier
+            .padding(bottom = 64.dp)
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer)
+            .fillMaxWidth()
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.tertiaryContainer)
+    )
 }
 
 @Preview(group = "comps")
@@ -58,14 +88,15 @@ fun PlayerScreenNames(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
             .padding(all = 8.dp)
+            .fillMaxWidth()
     ) {
         Text(
             text = "HYDRA",
             style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onSurface
+            color = MaterialTheme.colors.onSurface,
+            modifier = modifier.padding(top = 8.dp)
         )
         Text(text = "FORGOTTENANCE, GTM")
     }
@@ -74,10 +105,10 @@ fun PlayerScreenNames(
 @Preview(group = "comps")
 @Composable
 fun PlayerControls(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
@@ -89,15 +120,15 @@ fun PlayerControls(
             contentDescription = "Skip Previous",
             modifier = modifier
                 .clip(CircleShape)
-                .padding(12.dp)
-                .size(32.dp)
+                .padding(6.dp)
+                .size(40.dp)
         )
         Icon(
             imageVector = Icons.Rounded.PlayCircle,
             contentDescription = "Play",
             modifier = modifier
                 .clip(CircleShape)
-                .size(64.dp)
+                .size(90.dp)
                 .padding(8.dp)
         )
         Icon(
@@ -105,8 +136,8 @@ fun PlayerControls(
             contentDescription = "Skip Next",
             modifier = modifier
                 .clip(CircleShape)
-                .padding(12.dp)
-                .size(32.dp)
+                .padding(6.dp)
+                .size(40.dp)
         )
     }
 }

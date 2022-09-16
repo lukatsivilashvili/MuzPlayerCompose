@@ -1,5 +1,6 @@
 package com.example.muzplayer.presentation.components
 
+import android.util.Log.d
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -17,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.common.extensions.formatDuration
+import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.ui.library_screen.MainViewModel
 
 @Composable
@@ -33,11 +34,10 @@ fun MusicItem(
             .padding(8.dp)
             .clickable {
                 viewModel.playOrToggleSong(music)
-                viewModel.showPlayerFullScreen = true
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CoilImage(uri = if (music.hasArt) music.imageUrl else null)
+        CustomCoilImage(uri = if (music.hasArt) music.imageUrl else null)
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = music.title,
@@ -86,7 +86,7 @@ fun MusicItemPreview(
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CoilImage(uri = if (music.hasArt) music.imageUrl else null)
+        CustomCoilImage(uri = if (music.hasArt) music.imageUrl else null)
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = music.title,

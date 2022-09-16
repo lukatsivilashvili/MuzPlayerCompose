@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -21,10 +20,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.muzplayer.common.MusicScreen
-import com.example.muzplayer.presentation.components.BottomNavigationBar
 import com.example.muzplayer.components.HomeBottomBar
+import com.example.muzplayer.presentation.components.BottomNavigationBar
 import com.example.muzplayer.presentation.ui.home_screen.HomeBody
 import com.example.muzplayer.presentation.ui.library_screen.LibraryBody
+import com.example.muzplayer.presentation.ui.player_screen.PlayerScreen
 import com.example.muzplayer.presentation.ui.playlist_screen.PlaylistBody
 import com.example.muzplayer.presentation.ui.theme.MuzPlayerTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -50,7 +50,7 @@ fun MainActivityScreen() {
     val backstackEntry = navController.currentBackStackEntryAsState()
     val currentScreen = MusicScreen.fromRoute(backstackEntry.value?.destination?.route)
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.primary),
@@ -66,14 +66,16 @@ fun MainActivityScreen() {
                 )
             }
         ) { innerPadding ->
-            Box(modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
             ) {
                 MusicNavHost(navController, modifier = Modifier.padding(bottom = 64.dp))
                 HomeBottomBar(modifier = Modifier.align(Alignment.BottomCenter))
             }
         }
+        PlayerScreen()
     }
 }
 
