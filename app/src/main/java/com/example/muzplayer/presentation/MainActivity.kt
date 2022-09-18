@@ -21,8 +21,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.muzplayer.common.MusicScreen
-import com.example.muzplayer.presentation.ui.bottom_bar.HomeBottomBar
 import com.example.muzplayer.presentation.components.BottomNavigationBar
+import com.example.muzplayer.presentation.ui.bottom_bar.HomeBottomBar
 import com.example.muzplayer.presentation.ui.home_screen.HomeBody
 import com.example.muzplayer.presentation.ui.library_screen.LibraryBody
 import com.example.muzplayer.presentation.ui.player_screen.PlayerScreen
@@ -111,5 +111,8 @@ private fun setStatusColor() {
     systemUiController.setStatusBarColor(
         color = primaryColor,
         darkIcons = !darkTheme
+    )
+    systemUiController.setNavigationBarColor(
+        color = androidx.compose.material3.MaterialTheme.colorScheme.surface
     )
 }

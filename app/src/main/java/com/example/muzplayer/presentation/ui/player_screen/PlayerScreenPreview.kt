@@ -6,6 +6,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
@@ -56,7 +57,6 @@ fun PlayerScreenBodyPreview(
             .fillMaxSize()
             .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
             .padding(start = 16.dp, end = 16.dp, bottom = 64.dp),
-        verticalArrangement = Arrangement.Bottom
     ) {
         PlayerScreenCloseIconPreview()
         PlayerScreenImagePreview()
@@ -85,15 +85,20 @@ fun PlayerScreenCloseIconPreview(
 fun PlayerScreenImagePreview(
     modifier: Modifier = Modifier
 ) {
-    CustomCoilImage(
+    Box(
+        modifier = Modifier
+            .width(400.dp)
+            .height(400.dp)
+            .clip(RoundedCornerShape(5.dp)),
+        contentAlignment = Alignment.Center
+    )
+    {     CustomCoilImage(
         uri = null,
-        compSize = 350.dp,
         modifier = modifier
-            .padding(bottom = 64.dp)
             .background(androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer)
             .fillMaxWidth()
             .background(androidx.compose.material3.MaterialTheme.colorScheme.tertiaryContainer)
-    )
+    ) }
 }
 
 @Preview(group = "comps")

@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
@@ -21,8 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.muzplayer.common.extensions.formatDuration
 import com.example.muzplayer.common.extensions.isPlaying
 import com.example.muzplayer.common.extensions.toSong
 import com.example.muzplayer.domain.models.Song
@@ -88,53 +91,69 @@ fun PlayerScreenBody(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
+            .background(
+                androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
+            )
             .padding(start = 16.dp, end = 16.dp, bottom = 64.dp),
-        verticalArrangement = Arrangement.Bottom
-    ) {
-        val playbackStateCompat by bottomBarViewModel.playbackState.observeAsState()
 
+        ) {
         PlayerScreenCloseIcon(
+            modifier = modifier
+                .padding(start = 8.dp, bottom = 32.dp, top = 32.dp),
             onClose = { bottomBarViewModel.showPlayerFullScreen = false }
         )
-        PlayerScreenImage(songModel = song)
-        PlayerScreenNames(songModel = song)
-        PlayerSlider(
-            currentTime = playerScreenViewModel.currentPlaybackFormattedPosition,
-            totalTime = playerScreenViewModel.currentSongFormattedPosition,
-            playbackProgress = sliderProgress,
-            onSliderChange = { newPosition ->
-                localSliderValue = newPosition
-                sliderIsChanging = true
-            },
-            onSliderChangeFinished = {
-                bottomBarViewModel.seekTo(playerScreenViewModel.currentSongDuration * localSliderValue)
-                sliderIsChanging = false
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxSize()
+                .background(
+                    androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
+                )
+        ) {
+            val playbackStateCompat by bottomBarViewModel.playbackState.observeAsState()
+
+            PlayerScreenImage(songModel = song)
+            PlayerScreenNames(songModel = song, modifier = modifier.padding(top = 16.dp))
+            song?.duration?.let {
+                PlayerSlider(
+                    currentTime = playerScreenViewModel.currentPlaybackFormattedPosition,
+                    totalTime = it.formatDuration(),
+                    playbackProgress = sliderProgress,
+                    onSliderChange = { newPosition ->
+                        localSliderValue = newPosition
+                        sliderIsChanging = true
+                    },
+                    onSliderChangeFinished = {
+                        bottomBarViewModel.seekTo(playerScreenViewModel.currentSongDuration * localSliderValue)
+                        sliderIsChanging = false
+                    }
+                )
             }
-        )
-        PlayerControls(
-            playNextSong = { bottomBarViewModel.skipToNextSong() },
-            playPreviousSong = { bottomBarViewModel.skipToPreviousSong() },
-            playOrToggleSong = {
-                if (song != null) {
-                    bottomBarViewModel.playOrToggleSong(mediaItem = song, toggle = true)
-                }
-            },
-            playbackStateCompat = playbackStateCompat
-        )
-    }
-    LaunchedEffect("playbackPosition") {
-        playerScreenViewModel.updateCurrentPlaybackPosition()
-    }
+            PlayerControls(
+                playNextSong = { bottomBarViewModel.skipToNextSong() },
+                playPreviousSong = { bottomBarViewModel.skipToPreviousSong() },
+                playOrToggleSong = {
+                    if (song != null) {
+                        bottomBarViewModel.playOrToggleSong(mediaItem = song, toggle = true)
+                    }
+                },
+                playbackStateCompat = playbackStateCompat
+            )
+        }
+        LaunchedEffect("playbackPosition") {
+            playerScreenViewModel.updateCurrentPlaybackPosition()
+        }
 
-    DisposableEffect(backPressedDispatcher) {
-        backPressedDispatcher.addCallback(backCallback)
+        DisposableEffect(backPressedDispatcher) {
+            backPressedDispatcher.addCallback(backCallback)
 
-        onDispose {
-            backCallback.remove()
-            bottomBarViewModel.showPlayerFullScreen = false
+            onDispose {
+                backCallback.remove()
+                bottomBarViewModel.showPlayerFullScreen = false
+            }
         }
     }
+
 }
 
 @Composable
@@ -144,13 +163,13 @@ fun PlayerScreenCloseIcon(
 ) {
     Icon(
         imageVector = Icons.Rounded.KeyboardArrowDown,
+        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
         contentDescription = "Skip Previous",
         modifier = modifier
             .clickable {
                 onClose.invoke()
             }
             .clip(CircleShape)
-            .padding(bottom = 64.dp)
             .size(30.dp)
     )
 }
@@ -158,16 +177,24 @@ fun PlayerScreenCloseIcon(
 @Composable
 fun PlayerScreenImage(
     modifier: Modifier = Modifier,
-    songModel: Song?
+    songModel: Song?,
+    compSize: Dp = 320.dp
 ) {
-    CustomCoilImage(
-        uri = songModel?.imageUrl,
-        compSize = 350.dp,
+    Box(
         modifier = modifier
-            .padding(bottom = 64.dp)
-            .background(androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer)
-            .fillMaxWidth()
+            .width(compSize)
+            .height(compSize)
+            .clip(RoundedCornerShape(5.dp)),
+        contentAlignment = Alignment.Center
     )
+    {
+        CustomCoilImage(
+            uri = songModel?.imageUrl,
+            modifier = modifier
+                .background(androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer)
+                .fillMaxWidth()
+        )
+    }
 }
 
 @Composable
@@ -185,11 +212,16 @@ fun PlayerScreenNames(
                 text = it,
                 style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colors.onSurface,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = modifier.padding(top = 8.dp)
             )
         }
-        songModel?.subtitle?.let { Text(text = it) }
+        songModel?.subtitle?.let {
+            Text(
+                text = it,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+            )
+        }
     }
 }
 
@@ -207,12 +239,13 @@ fun PlayerControls(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
             .padding(vertical = 8.dp)
     ) {
         Icon(
             imageVector = Icons.Rounded.SkipPrevious,
             contentDescription = "Skip Previous",
+            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = modifier
                 .clickable {
                     playPreviousSong.invoke()
@@ -224,6 +257,7 @@ fun PlayerControls(
         Icon(
             imageVector = if (playbackStateCompat?.isPlaying == false) Icons.Rounded.PlayCircle else Icons.Rounded.PauseCircle,
             contentDescription = "Play",
+            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = modifier
                 .clickable {
                     playOrToggleSong.invoke()
@@ -235,6 +269,7 @@ fun PlayerControls(
         Icon(
             imageVector = Icons.Rounded.SkipNext,
             contentDescription = "Skip Next",
+            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = modifier
                 .clickable {
                     playNextSong.invoke()
@@ -258,7 +293,7 @@ fun PlayerSlider(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
     ) {
         androidx.compose.material3.Slider(
             value = playbackProgress,
@@ -266,8 +301,10 @@ fun PlayerSlider(
                 .fillMaxWidth(),
             colors = SliderDefaults.colors(
                 thumbColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-                activeTrackColor = androidx.compose.material3.MaterialTheme.colorScheme.secondary,
+                activeTrackColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
                 inactiveTrackColor = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+                activeTickColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary,
+                inactiveTickColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
             ),
             onValueChange = onSliderChange,
             onValueChangeFinished = onSliderChangeFinished
@@ -282,13 +319,15 @@ fun PlayerSlider(
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
                     currentTime,
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.body2,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
                     totalTime,
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.body2,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
         }
