@@ -2,16 +2,13 @@ package com.example.muzplayer.presentation.ui.bottom_bar
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.muzplayer.domain.models.Song
-import com.example.muzplayer.domain.exoplayer.MusicServiceConnection
+import com.example.muzplayer.common.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.common.extensions.isPlayEnabled
 import com.example.muzplayer.common.extensions.isPlaying
 import com.example.muzplayer.common.extensions.isPrepared
-import com.example.muzplayer.common.Constants.MEDIA_ROOT_ID
+import com.example.muzplayer.domain.exoplayer.MusicServiceConnection
+import com.example.muzplayer.domain.models.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -20,7 +17,6 @@ class BottomBarViewModel @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection
 ) : ViewModel() {
 
-    var showPlayerFullScreen by mutableStateOf(false)
     val currentPlayingSong = musicServiceConnection.currentPlayingSong
     val playbackState = musicServiceConnection.playbackState
 
@@ -46,6 +42,10 @@ class BottomBarViewModel @Inject constructor(
 
     fun skipToPreviousSong() {
         musicServiceConnection.transportController.skipToPrevious()
+    }
+
+    fun seekTo(pos: Float) {
+        musicServiceConnection.transportController.seekTo(pos.toLong())
     }
 
     fun playOrToggleSong(mediaItem: Song, toggle: Boolean = false) {

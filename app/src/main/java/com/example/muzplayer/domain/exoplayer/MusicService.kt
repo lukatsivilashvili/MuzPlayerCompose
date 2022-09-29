@@ -49,6 +49,14 @@ class MusicService : MediaBrowserServiceCompat() {
     private var isPlayerInitialize = false
 
     private lateinit var musicPlayerListener: MusicPlayerEventListener
+
+    companion object {
+        private const val TAG = "MediaPlayerService"
+
+        var currentSongDuration = 0L
+            private set
+    }
+
     override fun onCreate() {
         super.onCreate()
         serviceScope.launch {
