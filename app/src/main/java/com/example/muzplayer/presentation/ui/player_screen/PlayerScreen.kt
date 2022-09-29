@@ -3,20 +3,44 @@ package com.example.muzplayer.presentation.ui.player_screen
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.PauseCircle
+import androidx.compose.material.icons.rounded.PlayCircle
+import androidx.compose.material.icons.rounded.SkipNext
+import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.SliderDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,46 +55,41 @@ import com.example.muzplayer.common.extensions.toSong
 import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.components.CustomCoilImage
 import com.example.muzplayer.presentation.ui.bottom_bar.BottomBarViewModel
+import kotlinx.coroutines.launch
 
 /**
  * Created by ltsivilashvili on 14.09.22
  */
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PlayerScreen(
     backPressedDispatcher: OnBackPressedDispatcher,
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
     bottomBarViewModel: BottomBarViewModel = hiltViewModel(),
     playerScreenViewModel: PlayerScreenViewModel = hiltViewModel()
 ) {
     val song = bottomBarViewModel.currentPlayingSong.value
     val songModel = song.let { it?.toSong(LocalContext.current) }
 
-    AnimatedVisibility(
-        visible = song != null && bottomBarViewModel.showPlayerFullScreen,
-        enter = slideInVertically(
-            initialOffsetY = { it }
-        ),
-        exit = slideOutVertically(
-            targetOffsetY = { it }
-        )) {
-        if (song != null) {
-            PlayerScreenBody(
-                modifier = Modifier,
-                song = songModel,
-                backPressedDispatcher = backPressedDispatcher,
-                bottomBarViewModel = bottomBarViewModel,
-                playerScreenViewModel = playerScreenViewModel
-            )
-        }
-    }
+    PlayerScreenBody(
+        modifier = Modifier,
+        song = songModel,
+        backPressedDispatcher = backPressedDispatcher,
+        bottomBarViewModel = bottomBarViewModel,
+        playerScreenViewModel = playerScreenViewModel,
+        bottomSheetScaffoldState = bottomSheetScaffoldState
+    )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PlayerScreenBody(
     modifier: Modifier = Modifier,
     backPressedDispatcher: OnBackPressedDispatcher,
     bottomBarViewModel: BottomBarViewModel,
     playerScreenViewModel: PlayerScreenViewModel,
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
     song: Song?
 ) {
     var sliderIsChanging by remember { mutableStateOf(false) }
@@ -79,11 +98,14 @@ fun PlayerScreenBody(
     val sliderProgress =
         if (sliderIsChanging) localSliderValue else playerScreenViewModel.currentPlayerPosition
 
+    val coroutineScope = rememberCoroutineScope()
 
     val backCallback = remember {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                bottomBarViewModel.showPlayerFullScreen = false
+                coroutineScope.launch {
+                    bottomSheetScaffoldState.bottomSheetState.collapse()
+                }
             }
         }
     }
@@ -100,7 +122,9 @@ fun PlayerScreenBody(
         PlayerScreenCloseIcon(
             modifier = modifier
                 .padding(start = 8.dp, bottom = 32.dp, top = 32.dp),
-            onClose = { bottomBarViewModel.showPlayerFullScreen = false }
+            onClose = { coroutineScope.launch {
+                bottomSheetScaffoldState.bottomSheetState.collapse()
+            } }
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -149,7 +173,6 @@ fun PlayerScreenBody(
 
             onDispose {
                 backCallback.remove()
-                bottomBarViewModel.showPlayerFullScreen = false
             }
         }
     }

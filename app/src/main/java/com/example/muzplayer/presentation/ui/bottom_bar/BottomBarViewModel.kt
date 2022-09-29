@@ -2,9 +2,6 @@ package com.example.muzplayer.presentation.ui.bottom_bar
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.muzplayer.common.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.common.extensions.isPlayEnabled
@@ -20,7 +17,6 @@ class BottomBarViewModel @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection
 ) : ViewModel() {
 
-    var showPlayerFullScreen by mutableStateOf(false)
     val currentPlayingSong = musicServiceConnection.currentPlayingSong
     val playbackState = musicServiceConnection.playbackState
 

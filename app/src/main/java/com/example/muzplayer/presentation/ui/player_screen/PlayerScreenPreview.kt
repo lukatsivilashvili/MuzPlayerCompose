@@ -1,13 +1,23 @@
 package com.example.muzplayer.presentation.ui.player_screen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.PlayCircle
@@ -23,29 +33,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.muzplayer.presentation.components.CustomCoilImage
-import com.example.muzplayer.presentation.ui.bottom_bar.BottomBarViewModel
 
 /**
  * Created by ltsivilashvili on 14.09.22
  */
-
-@Composable
-fun PlayerScreenPreview(
-    bottomBarViewModel: BottomBarViewModel = hiltViewModel()
-) {
-    AnimatedVisibility(
-        visible = bottomBarViewModel.showPlayerFullScreen,
-        enter = slideInVertically(
-            initialOffsetY = { it }
-        ),
-        exit = slideOutVertically(
-            targetOffsetY = { it }
-        )) {
-        PlayerScreenBodyPreview()
-    }
-}
 
 @Preview(name = "PIXEL_3_XL", device = Devices.PIXEL_3_XL)
 @Composable
