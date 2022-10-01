@@ -1,10 +1,9 @@
 package com.example.muzplayer.common.extensions
 
-import android.content.Context
 import android.support.v4.media.MediaMetadataCompat
 import com.example.muzplayer.domain.models.Song
 
-fun MediaMetadataCompat.toSong(context: Context? = null): Song? {
+fun MediaMetadataCompat.toSong(): Song? {
     return description?.let {
         Song(
             mediaId = it.mediaId ?: "",
@@ -12,8 +11,7 @@ fun MediaMetadataCompat.toSong(context: Context? = null): Song? {
             subtitle = it.subtitle.toString(),
             duration = it.description.toString().toLong(),
             songUrl = it.mediaUri.toString(),
-            imageUrl = it.iconUri.toString(),
-//            hasArt = it.mediaUri.checkHasArt(context)
+            imageUrl = it.iconUri.toString()
         )
     }
 }

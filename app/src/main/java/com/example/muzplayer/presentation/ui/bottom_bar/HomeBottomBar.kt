@@ -61,7 +61,7 @@ fun HomeBottomBar(
         modifier = modifier
     ) {
         if (currentSong != null) {
-            val song = currentSong.toSong(LocalContext.current)
+            val song = currentSong.toSong()
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
