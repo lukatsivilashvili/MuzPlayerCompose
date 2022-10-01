@@ -6,12 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.muzplayer.common.Constants.UPDATE_PLAYER_POSITION_INTERVAL
 import com.example.muzplayer.common.extensions.currentPlaybackPosition
-import com.example.muzplayer.common.extensions.toSong
 import com.example.muzplayer.domain.exoplayer.MusicServiceConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,25 +20,18 @@ class PlayerScreenViewModel @Inject constructor(
 
     private val playbackState = musicServiceConnection.playbackState
 
-    var currentPlaybackPosition by mutableStateOf(0L)
+    private var currentPlaybackPosition by mutableStateOf(0L)
 
-    val currentPlayerPosition: Float
-        get() {
-            if (currentSongDuration > 0) {
-                return currentPlaybackPosition.toFloat() / currentSongDuration
-            }
-            return 0f
+    fun getCurrentPlayerPosition(currentDuration: Long?): Float {
+        if (currentDuration != null && currentDuration > 0) {
+            return currentPlaybackPosition.toFloat() / currentDuration
         }
+        return 0f
+    }
 
     val currentPlaybackFormattedPosition: String
         get() = formatLong(currentPlaybackPosition)
 
-    val currentSongFormattedPosition: String
-        get() = formatLong(currentSongDuration)
-
-
-    val song = musicServiceConnection.currentPlayingSong.value
-    val currentSongDuration: Long = song?.toSong()?.duration ?: 0L
 
     suspend fun updateCurrentPlaybackPosition() {
         val currentPosition = playbackState.value?.currentPlaybackPosition

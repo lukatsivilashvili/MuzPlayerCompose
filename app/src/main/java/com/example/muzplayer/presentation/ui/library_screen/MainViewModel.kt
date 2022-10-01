@@ -3,18 +3,15 @@ package com.example.muzplayer.presentation.ui.library_screen
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.muzplayer.domain.exoplayer.MusicServiceConnection
-import com.example.muzplayer.domain.exoplayer.MusicSource
+import com.example.muzplayer.common.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.common.extensions.isPlayEnabled
 import com.example.muzplayer.common.extensions.isPlaying
 import com.example.muzplayer.common.extensions.isPrepared
+import com.example.muzplayer.domain.exoplayer.MusicServiceConnection
+import com.example.muzplayer.domain.exoplayer.MusicSource
 import com.example.muzplayer.domain.models.Song
-import com.example.muzplayer.common.Constants.MEDIA_ROOT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,8 +25,6 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     var mediaItems = MutableStateFlow<List<Song>>(emptyList())
-
-    var showPlayerFullScreen by mutableStateOf(false)
 
     val currentPlayingSong = musicServiceConnection.currentPlayingSong
 

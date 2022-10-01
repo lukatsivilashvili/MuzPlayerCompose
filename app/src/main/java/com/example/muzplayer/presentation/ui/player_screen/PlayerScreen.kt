@@ -96,7 +96,7 @@ fun PlayerScreenBody(
     var localSliderValue by remember { mutableStateOf(0f) }
 
     val sliderProgress =
-        if (sliderIsChanging) localSliderValue else playerScreenViewModel.currentPlayerPosition
+        if (sliderIsChanging) localSliderValue else playerScreenViewModel.getCurrentPlayerPosition(song?.duration)
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -148,7 +148,7 @@ fun PlayerScreenBody(
                         sliderIsChanging = true
                     },
                     onSliderChangeFinished = {
-                        bottomBarViewModel.seekTo(playerScreenViewModel.currentSongDuration * localSliderValue)
+                        bottomBarViewModel.seekTo(song.duration * localSliderValue)
                         sliderIsChanging = false
                     }
                 )
