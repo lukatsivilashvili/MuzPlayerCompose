@@ -10,7 +10,9 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 
 @SuppressLint("PermissionLaunchedDuringComposition")
 @OptIn(ExperimentalPermissionsApi::class)
@@ -37,15 +39,15 @@ fun SinglePermission() {
     })
 
     when {
-        permissionState.hasPermission -> {
+        permissionState.status.isGranted -> {
             Text(text = "Reading external permission is granted")
         }
-        permissionState.shouldShowRationale -> {
+        permissionState.status.shouldShowRationale -> {
             Column {
                 Text(text = "Reading external permission is required by this app")
             }
         }
-        !permissionState.hasPermission && !permissionState.shouldShowRationale -> {
+        !permissionState.status.isGranted && !permissionState.status.shouldShowRationale -> {
             Text(text = "Permission fully denied. Go to settings to enable")
         }
     }
