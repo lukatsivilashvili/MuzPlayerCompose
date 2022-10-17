@@ -2,6 +2,9 @@ package com.example.muzplayer.presentation.ui.bottom_bar
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL
+import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.muzplayer.common.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.common.extensions.isPlayEnabled
@@ -20,6 +23,8 @@ class BottomBarViewModel @Inject constructor(
     val currentPlayingSong = musicServiceConnection.currentPlayingSong
     val playbackState = musicServiceConnection.playbackState
 
+    var shuffleStates = mutableStateOf(1)
+
     init {
         musicServiceConnection.subscribe(
             MEDIA_ROOT_ID,
@@ -34,8 +39,6 @@ class BottomBarViewModel @Inject constructor(
     }
 
 
-
-
     fun skipToNextSong() {
         musicServiceConnection.transportController.skipToNext()
     }
@@ -48,6 +51,20 @@ class BottomBarViewModel @Inject constructor(
         musicServiceConnection.transportController.seekTo(pos.toLong())
     }
 
+    fun shufflePlaylist(shuffleState: Int) {
+        when (shuffleState) {
+            0 -> {
+                musicServiceConnection.transportController.setShuffleMode(SHUFFLE_MODE_NONE)
+                shuffleStates.value = 1
+            }
+
+            1 -> {
+                musicServiceConnection.transportController.setShuffleMode(SHUFFLE_MODE_ALL)
+                shuffleStates.value = 0
+            }
+        }
+    }
+
     fun playOrToggleSong(mediaItem: Song, toggle: Boolean = false) {
         val isPrepared = playbackState.value?.isPrepared ?: false
         if (isPrepared && mediaItem.mediaId ==
@@ -58,9 +75,11 @@ class BottomBarViewModel @Inject constructor(
                     playbackState.isPlaying -> {
                         if (toggle) musicServiceConnection.transportController.pause()
                     }
+
                     playbackState.isPlayEnabled -> {
                         musicServiceConnection.transportController.play()
                     }
+
                     else -> Unit
                 }
             }

@@ -28,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.SliderDefaults
@@ -44,7 +45,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -70,7 +70,7 @@ fun PlayerScreen(
     playerScreenViewModel: PlayerScreenViewModel = hiltViewModel()
 ) {
     val song = bottomBarViewModel.currentPlayingSong.value
-    val songModel = song.let { it?.toSong(LocalContext.current) }
+    val songModel = song.let { it?.toSong() }
 
     PlayerScreenBody(
         modifier = Modifier,
@@ -100,6 +100,7 @@ fun PlayerScreenBody(
 
     val coroutineScope = rememberCoroutineScope()
 
+
     val backCallback = remember {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -122,9 +123,11 @@ fun PlayerScreenBody(
         PlayerScreenCloseIcon(
             modifier = modifier
                 .padding(start = 8.dp, bottom = 32.dp, top = 32.dp),
-            onClose = { coroutineScope.launch {
-                bottomSheetScaffoldState.bottomSheetState.collapse()
-            } }
+            onClose = {
+                coroutineScope.launch {
+                    bottomSheetScaffoldState.bottomSheetState.collapse()
+                }
+            }
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -160,6 +163,9 @@ fun PlayerScreenBody(
                     if (song != null) {
                         bottomBarViewModel.playOrToggleSong(mediaItem = song, toggle = true)
                     }
+                },
+                shuffleSongs = {
+                    bottomBarViewModel.shufflePlaylist(bottomBarViewModel.shuffleStates.value)
                 },
                 playbackStateCompat = playbackStateCompat
             )
@@ -254,7 +260,8 @@ fun PlayerControls(
     playbackStateCompat: PlaybackStateCompat?,
     playNextSong: () -> Unit,
     playPreviousSong: () -> Unit,
-    playOrToggleSong: () -> Unit
+    playOrToggleSong: () -> Unit,
+    shuffleSongs: () -> Unit
 ) {
 
     Row(
@@ -265,6 +272,19 @@ fun PlayerControls(
             .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
             .padding(vertical = 8.dp)
     ) {
+        Icon(
+            imageVector = Icons.Rounded.Shuffle,
+            contentDescription = "Shuffle Playlist",
+            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = modifier
+                .clickable {
+                    shuffleSongs.invoke()
+                }
+                .clip(CircleShape)
+                .padding(6.dp)
+                .size(40.dp)
+        )
+
         Icon(
             imageVector = Icons.Rounded.SkipPrevious,
             contentDescription = "Skip Previous",
