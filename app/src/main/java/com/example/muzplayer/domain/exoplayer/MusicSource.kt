@@ -39,7 +39,7 @@ class MusicSource @Inject constructor(
     suspend fun fetchMediaData() = withContext(Dispatchers.Main) {
         state = STATE_INITIALIZING
         val allSongs = repository.getAllSongs()
-        songs = allSongs.shuffled().map { song ->
+        songs = allSongs.map { song ->
             Builder()
                 .putString(METADATA_KEY_TITLE, song.title)
                 .putString(METADATA_KEY_DISPLAY_TITLE, song.title)
