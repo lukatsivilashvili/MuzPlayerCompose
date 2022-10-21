@@ -23,7 +23,7 @@ class BottomBarViewModel @Inject constructor(
     val currentPlayingSong = musicServiceConnection.currentPlayingSong
     val playbackState = musicServiceConnection.playbackState
 
-    var shuffleStates = mutableStateOf(1)
+    var shuffleStates = mutableStateOf(false)
 
     init {
         musicServiceConnection.subscribe(
@@ -51,16 +51,16 @@ class BottomBarViewModel @Inject constructor(
         musicServiceConnection.transportController.seekTo(pos.toLong())
     }
 
-    fun shufflePlaylist(shuffleState: Int) {
+    fun shufflePlaylist(shuffleState: Boolean) {
         when (shuffleState) {
-            0 -> {
+            true -> {
                 musicServiceConnection.transportController.setShuffleMode(SHUFFLE_MODE_NONE)
-                shuffleStates.value = 1
+                shuffleStates.value = false
             }
 
-            1 -> {
+            false -> {
                 musicServiceConnection.transportController.setShuffleMode(SHUFFLE_MODE_ALL)
-                shuffleStates.value = 0
+                shuffleStates.value = true
             }
         }
     }

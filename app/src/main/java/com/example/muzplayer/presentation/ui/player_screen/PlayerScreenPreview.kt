@@ -21,6 +21,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.PlayCircle
+import androidx.compose.material.icons.rounded.Repeat
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.SliderDefaults
@@ -127,13 +129,25 @@ fun PlayerControlsPreview(
             .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
             .padding(vertical = 8.dp)
     ) {
+
+        Icon(
+            imageVector = Icons.Rounded.Shuffle,
+            contentDescription = "Shuffle Playlist",
+            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = modifier
+
+                .clip(CircleShape)
+                .padding(16.dp)
+                .size(35.dp)
+        )
+
         Icon(
             imageVector = Icons.Rounded.SkipPrevious,
             contentDescription = "Skip Previous",
             modifier = modifier
                 .clip(CircleShape)
                 .padding(6.dp)
-                .size(40.dp)
+                .size(45.dp)
         )
         Icon(
             imageVector = Icons.Rounded.PlayCircle,
@@ -149,7 +163,18 @@ fun PlayerControlsPreview(
             modifier = modifier
                 .clip(CircleShape)
                 .padding(6.dp)
-                .size(40.dp)
+                .size(45.dp)
+        )
+
+        Icon(
+            imageVector = Icons.Rounded.Repeat,
+            contentDescription = "Repeat Song",
+            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = modifier
+
+                .clip(CircleShape)
+                .padding(16.dp)
+                .size(35.dp)
         )
     }
 }
