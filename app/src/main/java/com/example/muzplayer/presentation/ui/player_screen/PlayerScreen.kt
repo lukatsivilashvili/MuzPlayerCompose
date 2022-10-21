@@ -28,7 +28,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
+import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.Shuffle
+import androidx.compose.material.icons.rounded.ShuffleOn
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.SliderDefaults
@@ -53,6 +55,7 @@ import com.example.muzplayer.common.extensions.formatDuration
 import com.example.muzplayer.common.extensions.isPlaying
 import com.example.muzplayer.common.extensions.toSong
 import com.example.muzplayer.domain.models.Song
+import com.example.muzplayer.presentation.components.CrossFadeIcon
 import com.example.muzplayer.presentation.components.CustomCoilImage
 import com.example.muzplayer.presentation.ui.bottom_bar.BottomBarViewModel
 import kotlinx.coroutines.launch
@@ -167,7 +170,8 @@ fun PlayerScreenBody(
                 shuffleSongs = {
                     bottomBarViewModel.shufflePlaylist(bottomBarViewModel.shuffleStates.value)
                 },
-                playbackStateCompat = playbackStateCompat
+                playbackStateCompat = playbackStateCompat,
+                viewModel = bottomBarViewModel
             )
         }
         LaunchedEffect("playbackPosition") {
@@ -258,6 +262,7 @@ fun PlayerScreenNames(
 fun PlayerControls(
     modifier: Modifier = Modifier,
     playbackStateCompat: PlaybackStateCompat?,
+    viewModel: BottomBarViewModel,
     playNextSong: () -> Unit,
     playPreviousSong: () -> Unit,
     playOrToggleSong: () -> Unit,
@@ -272,17 +277,16 @@ fun PlayerControls(
             .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
             .padding(vertical = 8.dp)
     ) {
-        Icon(
-            imageVector = Icons.Rounded.Shuffle,
+        CrossFadeIcon(
+            targetState = viewModel.shuffleStates.value,
+            modifier = modifier,
+            iconVectorDisabled = Icons.Rounded.Shuffle,
+            iconVectorEnabled = Icons.Rounded.ShuffleOn,
             contentDescription = "Shuffle Playlist",
-            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
-            modifier = modifier
-                .clickable {
-                    shuffleSongs.invoke()
-                }
-                .clip(CircleShape)
-                .padding(6.dp)
-                .size(40.dp)
+            iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+            onClickAction = { shuffleSongs.invoke() },
+            paddingSize = 16.dp,
+            size = 30.dp
         )
 
         Icon(
@@ -290,36 +294,50 @@ fun PlayerControls(
             contentDescription = "Skip Previous",
             tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = modifier
-                .clickable {
+                .clip(RoundedCornerShape(30.dp))
+                .clickable{
                     playPreviousSong.invoke()
                 }
                 .clip(CircleShape)
                 .padding(6.dp)
-                .size(40.dp)
+                .size(45.dp)
         )
-        Icon(
-            imageVector = if (playbackStateCompat?.isPlaying == false) Icons.Rounded.PlayCircle else Icons.Rounded.PauseCircle,
-            contentDescription = "Play",
-            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
-            modifier = modifier
-                .clickable {
-                    playOrToggleSong.invoke()
-                }
-                .clip(CircleShape)
-                .size(90.dp)
-                .padding(8.dp)
+
+        CrossFadeIcon(
+            targetState = playbackStateCompat?.isPlaying ?: false,
+            modifier = modifier,
+            iconVectorDisabled = Icons.Rounded.PlayCircle,
+            iconVectorEnabled = Icons.Rounded.PauseCircle,
+            contentDescription = "Play-Pause",
+            iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+            onClickAction = { playOrToggleSong.invoke() },
+            paddingSize = 8.dp,
+            size = 90.dp
         )
+
         Icon(
             imageVector = Icons.Rounded.SkipNext,
             contentDescription = "Skip Next",
             tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = modifier
+                .clip(RoundedCornerShape(30.dp))
                 .clickable {
                     playNextSong.invoke()
                 }
                 .clip(CircleShape)
                 .padding(6.dp)
-                .size(40.dp)
+                .size(45.dp)
+        )
+
+        Icon(
+            imageVector = Icons.Rounded.Repeat,
+            contentDescription = "Repeat Song",
+            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = modifier
+
+                .clip(CircleShape)
+                .padding(16.dp)
+                .size(30.dp)
         )
     }
 }
