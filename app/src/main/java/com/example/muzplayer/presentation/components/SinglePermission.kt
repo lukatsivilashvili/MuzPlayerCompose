@@ -2,6 +2,7 @@ package com.example.muzplayer.presentation.components
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,8 +19,11 @@ import com.google.accompanist.permissions.shouldShowRationale
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SinglePermission() {
-    val permissionState =
+    val permissionState = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+        rememberPermissionState(permission = Manifest.permission.READ_MEDIA_AUDIO)
+    }else{
         rememberPermissionState(permission = Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
     val lifecycleOwner = LocalLifecycleOwner.current
 
     DisposableEffect(key1 = lifecycleOwner, effect = {
