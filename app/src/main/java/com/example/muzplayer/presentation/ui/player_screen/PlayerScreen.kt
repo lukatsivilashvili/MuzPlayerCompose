@@ -48,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -243,6 +244,8 @@ fun PlayerScreenNames(
         songModel?.title?.let {
             Text(
                 text = it,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
@@ -251,6 +254,8 @@ fun PlayerScreenNames(
         }
         songModel?.subtitle?.let {
             Text(
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 text = it,
                 color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             )
