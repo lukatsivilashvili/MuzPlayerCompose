@@ -136,7 +136,7 @@ fun MusicNavHost(navController: NavHostController, modifier: Modifier = Modifier
 @Composable
 private fun setStatusColor() {
     val systemUiController = rememberSystemUiController()
-    val primaryColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+    val primaryColor = androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
     val darkTheme = isSystemInDarkTheme()
 
     systemUiController.setStatusBarColor(
