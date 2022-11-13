@@ -25,10 +25,11 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Bedtime
+import androidx.compose.material.icons.rounded.BedtimeOff
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
-import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.ShuffleOn
 import androidx.compose.material.icons.rounded.SkipNext
@@ -58,6 +59,7 @@ import com.example.muzplayer.common.extensions.toSong
 import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.components.CrossFadeIcon
 import com.example.muzplayer.presentation.components.CustomCoilImage
+import com.example.muzplayer.presentation.components.SleepTimerDialog
 import com.example.muzplayer.presentation.ui.bottom_bar.BottomBarViewModel
 import kotlinx.coroutines.launch
 
@@ -100,7 +102,9 @@ fun PlayerScreenBody(
     var localSliderValue by remember { mutableStateOf(0f) }
 
     val sliderProgress =
-        if (sliderIsChanging) localSliderValue else playerScreenViewModel.getCurrentPlayerPosition(song?.duration)
+        if (sliderIsChanging) localSliderValue else playerScreenViewModel.getCurrentPlayerPosition(
+            song?.duration
+        )
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -142,6 +146,7 @@ fun PlayerScreenBody(
                 )
         ) {
             val playbackStateCompat by bottomBarViewModel.playbackState.observeAsState()
+            val openDialog = remember { mutableStateOf(false) }
 
             PlayerScreenImage(songModel = song)
             PlayerScreenNames(songModel = song, modifier = modifier.padding(top = 16.dp))
@@ -172,8 +177,14 @@ fun PlayerScreenBody(
                     bottomBarViewModel.shufflePlaylist(bottomBarViewModel.shuffleStates.value)
                 },
                 playbackStateCompat = playbackStateCompat,
-                viewModel = bottomBarViewModel
+                viewModel = bottomBarViewModel,
+                openDialog = { openDialog.value = true }
             )
+
+            if (openDialog.value) {
+
+                SleepTimerDialog(isOpen = openDialog)
+            }
         }
         LaunchedEffect("playbackPosition") {
             playerScreenViewModel.updateCurrentPlaybackPosition()
@@ -271,7 +282,8 @@ fun PlayerControls(
     playNextSong: () -> Unit,
     playPreviousSong: () -> Unit,
     playOrToggleSong: () -> Unit,
-    shuffleSongs: () -> Unit
+    shuffleSongs: () -> Unit,
+    openDialog: () -> Unit
 ) {
 
     Row(
@@ -300,7 +312,7 @@ fun PlayerControls(
             tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = modifier
                 .clip(RoundedCornerShape(30.dp))
-                .clickable{
+                .clickable {
                     playPreviousSong.invoke()
                 }
                 .clip(CircleShape)
@@ -334,15 +346,16 @@ fun PlayerControls(
                 .size(45.dp)
         )
 
-        Icon(
-            imageVector = Icons.Rounded.Repeat,
-            contentDescription = "Repeat Song",
-            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
-            modifier = modifier
-
-                .clip(CircleShape)
-                .padding(16.dp)
-                .size(30.dp)
+        CrossFadeIcon(
+            targetState = playbackStateCompat?.isPlaying ?: false,
+            modifier = modifier,
+            iconVectorDisabled = Icons.Rounded.Bedtime,
+            iconVectorEnabled = Icons.Rounded.BedtimeOff,
+            contentDescription = "Sleep-Timer",
+            iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+            onClickAction = { openDialog.invoke() },
+            paddingSize = 16.dp,
+            size = 30.dp
         )
     }
 }
