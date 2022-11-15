@@ -183,7 +183,13 @@ fun PlayerScreenBody(
 
             if (openDialog.value) {
 
-                SleepTimerDialog(isOpen = openDialog)
+                if (song != null) {
+                    SleepTimerDialog(
+                        isOpen = openDialog,
+                        bottomBarViewModel = bottomBarViewModel,
+                        song = song
+                    )
+                }
             }
         }
         LaunchedEffect("playbackPosition") {
@@ -328,7 +334,7 @@ fun PlayerControls(
             contentDescription = "Play-Pause",
             iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             onClickAction = { playOrToggleSong.invoke() },
-            paddingSize = 8.dp,
+            paddingSize = 0.dp,
             size = 90.dp
         )
 

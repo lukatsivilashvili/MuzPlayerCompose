@@ -80,10 +80,11 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-
-    lintOptions {
-        baseline file("lint-baseline.xml")
+    namespace 'com.example.muzplayer'
+    lint {
+        baseline file('lint-baseline.xml')
     }
+
 }
 
 dependencies {
@@ -107,9 +108,9 @@ dependencies {
 
     //Material
     // Required minimum version: 1.5.0
-    implementation 'com.google.android.material:material:1.6.1'
-// For use of Material3 in Compose
-    implementation 'androidx.compose.material3:material3:1.0.0-rc01'
+    implementation 'com.google.android.material:material:1.7.0'
+    // For use of Material3 in Compose
+    implementation 'androidx.compose.material3:material3:1.1.0-alpha02'
 
     // ExoPlayer
     api "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
