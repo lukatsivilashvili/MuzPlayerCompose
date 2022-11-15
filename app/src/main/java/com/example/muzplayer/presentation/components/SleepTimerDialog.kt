@@ -136,8 +136,12 @@ private fun setTimer(sleepTime: Int, song: Song, bottomBarViewModel: BottomBarVi
     }
 
     timer.run {
-        schedule(pauseTask, sleepTime * 60000.toLong())
-        schedule(killTask, (sleepTime * 60000 + 1000).toLong())
+        if (song.duration <= sleepTime * 60000.toLong()) {
+            schedule(killTask, (sleepTime * 60000 + 1000).toLong())
+        } else {
+            schedule(pauseTask, sleepTime * 60000.toLong())
+            schedule(killTask, (sleepTime * 60000 + 1000).toLong())
+        }
     }
 
 }
