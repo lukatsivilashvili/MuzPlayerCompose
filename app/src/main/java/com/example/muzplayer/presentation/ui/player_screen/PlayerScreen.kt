@@ -1,6 +1,7 @@
 package com.example.muzplayer.presentation.ui.player_screen
 
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log.d
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.foundation.background
@@ -39,8 +40,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -59,7 +60,7 @@ import com.example.muzplayer.common.extensions.toSong
 import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.components.CrossFadeIcon
 import com.example.muzplayer.presentation.components.CustomCoilImage
-import com.example.muzplayer.presentation.components.SleepTimerDialog
+import com.example.muzplayer.presentation.components.sleep_timer.SleepTimerDialog
 import com.example.muzplayer.presentation.ui.bottom_bar.BottomBarViewModel
 import kotlinx.coroutines.launch
 
@@ -75,8 +76,9 @@ fun PlayerScreen(
     bottomBarViewModel: BottomBarViewModel = hiltViewModel(),
     playerScreenViewModel: PlayerScreenViewModel = hiltViewModel()
 ) {
-    val song = bottomBarViewModel.currentPlayingSong.value
-    val songModel = song.let { it?.toSong() }
+    val song = bottomBarViewModel.currentPlayingSongScreen.collectAsState()
+    val songModel = song.value?.toSong()
+    d("screen", songModel.toString())
 
     PlayerScreenBody(
         modifier = Modifier,
@@ -145,7 +147,7 @@ fun PlayerScreenBody(
                     androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
                 )
         ) {
-            val playbackStateCompat by bottomBarViewModel.playbackState.observeAsState()
+            val playbackStateCompat = bottomBarViewModel.playbackState.value
             val openDialog = remember { mutableStateOf(false) }
 
             PlayerScreenImage(songModel = song)
