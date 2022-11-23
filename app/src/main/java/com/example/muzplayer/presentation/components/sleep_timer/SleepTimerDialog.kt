@@ -1,6 +1,5 @@
 package com.example.muzplayer.presentation.components.sleep_timer
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -20,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
@@ -42,7 +40,6 @@ fun SleepTimerDialog(
         TimerValues.ONE_HOUR.stringValue,
 
         )
-    val mContext = LocalContext.current
 
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
     val (checkedState, onStateChange) = remember { mutableStateOf(false) }
@@ -70,10 +67,7 @@ fun SleepTimerDialog(
                                     selected = (text == selectedOption),
                                     onClick = {
                                         onOptionSelected(text)
-                                        Toast
-                                            .makeText(mContext, selectedOption, Toast.LENGTH_SHORT)
-                                            .show()
-                                    },
+                                        },
                                     role = Role.RadioButton
                                 )
                                 .padding(horizontal = 16.dp),
@@ -121,7 +115,8 @@ fun SleepTimerDialog(
                             sleepTime = handleSelectedTime(selectedOption, bottomBarViewModel),
                             song = song
                         )
-                        bottomBarViewModel._shouldWaitTillEnd.postValue(checkedState)
+                        bottomBarViewModel.shouldWaitTillEndFlow.value = checkedState
+                        bottomBarViewModel.setWaitTillEndValue()
                     }
                 ) {
                     Text("Start")

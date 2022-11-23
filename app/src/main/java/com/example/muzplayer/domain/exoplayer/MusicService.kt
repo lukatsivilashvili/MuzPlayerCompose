@@ -39,6 +39,9 @@ class MusicService : MediaBrowserServiceCompat() {
     @Inject
     lateinit var musicSource: MusicSource
 
+    @Inject
+    lateinit var musicServiceConnection: MusicServiceConnection
+
     private lateinit var musicNotificationManger: MusicNotificationManger
 
     private val serviceJob = Job()
@@ -99,7 +102,7 @@ class MusicService : MediaBrowserServiceCompat() {
         mediaSessionConnector.setQueueNavigator(MusicQueueNavigator())
         mediaSessionConnector.setPlayer(exoPlayer)
 
-        musicPlayerListener = MusicPlayerEventListener(this)
+        musicPlayerListener = MusicPlayerEventListener(this, musicServiceConnection)
         exoPlayer.addListener(musicPlayerListener)
         musicNotificationManger.showNotification(exoPlayer)
     }

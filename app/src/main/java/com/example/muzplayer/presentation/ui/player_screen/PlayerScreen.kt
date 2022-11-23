@@ -1,7 +1,6 @@
 package com.example.muzplayer.presentation.ui.player_screen
 
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log.d
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.foundation.background
@@ -78,7 +77,6 @@ fun PlayerScreen(
 ) {
     val song = bottomBarViewModel.currentPlayingSongScreen.collectAsState()
     val songModel = song.value?.toSong()
-    d("screen", songModel.toString())
 
     PlayerScreenBody(
         modifier = Modifier,
@@ -355,7 +353,7 @@ fun PlayerControls(
         )
 
         CrossFadeIcon(
-            targetState = playbackStateCompat?.isPlaying ?: false,
+            targetState = false,
             modifier = modifier,
             iconVectorDisabled = Icons.Rounded.Bedtime,
             iconVectorEnabled = Icons.Rounded.BedtimeOff,

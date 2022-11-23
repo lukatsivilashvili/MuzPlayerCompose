@@ -32,17 +32,18 @@ class BottomBarViewModel @Inject constructor(
 ) : ViewModel() {
 
     val currentPlayingSongScreen: MutableStateFlow<MediaMetadataCompat?> = musicServiceConnection.currentPlayingSong
-    val currentSongFlow: MutableStateFlow<MediaMetadataCompat?> = musicServiceConnection.currentPlayingSong
+    private val currentSongFlow: MutableStateFlow<MediaMetadataCompat?> = musicServiceConnection.currentPlayingSong
+    private val songEndFLow: MutableStateFlow<Int> = musicServiceConnection.songEndCounter
 
     var currentPlayingSong: MediaMetadataCompat? = null
     val playbackState = musicServiceConnection.playbackState
+    var songEndNums: Int? = null
 
     val _selectedTime = MutableLiveData<Int?>()
     private val selectedTime: LiveData<Int?> = _selectedTime
     private var selectedTimeValue: Int? = 0
 
-    val _shouldWaitTillEnd = MutableLiveData<Boolean?>()
-    private val shouldWaitTillEnd: LiveData<Boolean?> = _shouldWaitTillEnd
+    val shouldWaitTillEndFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private var shouldWaitTillEndValue: Boolean? = false
 
 
@@ -62,29 +63,27 @@ class BottomBarViewModel @Inject constructor(
                 }
             })
 
-        viewModelScope.launch {
-            currentSongFlow.collect{
-                currentPlayingSong = it
+        viewModelScope.launch(Dispatchers.IO) {
+            launch {
+                currentSongFlow.collect {
+                    currentPlayingSong = it
+                }
+            }
+            launch {
+                songEndFLow.collect{
+                    songEndNums = it
+                    d("endTag", songEndNums.toString())
+                }
             }
         }
+    }
 
-//
-//        shouldWaitTillEnd.observeForever {
-//            shouldWaitTillEndValue = it
-//        }
-//
-//        selectedTime.observeForever {
-//            selectedTimeValue = it
-//        }
-//
-//        currentPlayingSong.observeForever { song ->
-//            d("myTag", song?.toSong().toString())
-//            if (song != null) {
-//                selectedTimeValue?.let { setTimer(song = song.toSong()!!, sleepTime = it) }
-//
-//            }
-//        }
-
+    fun setWaitTillEndValue(){
+        viewModelScope.launch {
+            shouldWaitTillEndFlow.collect{
+                shouldWaitTillEndValue = it
+            }
+        }
     }
 
 

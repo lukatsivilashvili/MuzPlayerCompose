@@ -12,15 +12,18 @@ import androidx.lifecycle.MutableLiveData
 import com.example.muzplayer.common.Event
 import com.example.muzplayer.common.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
-class MusicServiceConnection(
+class MusicServiceConnection @Inject constructor(
     context: Context
 ) {
     private val _isConnected = MutableLiveData<Event<Resource<Boolean>>>()
 
     val playbackState = mutableStateOf<PlaybackStateCompat?>(null)
 
-    var currentPlayingSong = MutableStateFlow<MediaMetadataCompat?>(null)
+    val currentPlayingSong = MutableStateFlow<MediaMetadataCompat?>(null)
+
+    val songEndCounter = MutableStateFlow(0)
 
     private lateinit var mediaController: MediaControllerCompat
 
