@@ -1,13 +1,12 @@
 package com.example.muzplayer.presentation.ui.bottom_bar
 
+import android.os.CountDownTimer
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL
 import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE
 import android.util.Log.d
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.muzplayer.common.Constants.MEDIA_ROOT_ID
@@ -18,11 +17,9 @@ import com.example.muzplayer.domain.exoplayer.MusicServiceConnection
 import com.example.muzplayer.domain.models.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.Timer
-import java.util.TimerTask
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
@@ -31,23 +28,26 @@ class BottomBarViewModel @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection
 ) : ViewModel() {
 
-    val currentPlayingSongScreen: MutableStateFlow<MediaMetadataCompat?> = musicServiceConnection.currentPlayingSong
-    private val currentSongFlow: MutableStateFlow<MediaMetadataCompat?> = musicServiceConnection.currentPlayingSong
+    private val testPair = MutableStateFlow(Triple<Int?, Boolean?, Song?>(0, false, null))
+
+    val currentPlayingSongScreen: MutableStateFlow<MediaMetadataCompat?> =
+        musicServiceConnection.currentPlayingSong
+    private val currentSongFlow: MutableStateFlow<MediaMetadataCompat?> =
+        musicServiceConnection.currentPlayingSong
     private val songEndFLow: MutableStateFlow<Int> = musicServiceConnection.songEndCounter
+
+    private val testFlow: MutableStateFlow<Triple<Int?, Boolean?, Song?>> = testPair
 
     var currentPlayingSong: MediaMetadataCompat? = null
     val playbackState = musicServiceConnection.playbackState
+    var testTriple: Triple<Int?, Boolean?, Song?>? = null
     var songEndNums: Int? = null
 
-    val _selectedTime = MutableLiveData<Int?>()
-    private val selectedTime: LiveData<Int?> = _selectedTime
-    private var selectedTimeValue: Int? = 0
 
     val shouldWaitTillEndFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private var shouldWaitTillEndValue: Boolean? = false
 
-
-
+    private var countDownTimer: CountDownTimer? = null
 
     var shuffleStates = mutableStateOf(false)
 
@@ -70,17 +70,34 @@ class BottomBarViewModel @Inject constructor(
                 }
             }
             launch {
-                songEndFLow.collect{
+                songEndFLow.collect {
                     songEndNums = it
-                    d("endTag", songEndNums.toString())
+                    if (testTriple != null) {
+                        if (testTriple?.second == true && testTriple?.first != songEndNums) {
+                            testTriple?.third?.let { it1 ->
+                                playOrToggleSong(
+                                    mediaItem = it1,
+                                    toggle = true
+                                )
+                            }
+                            delay(1000)
+                            exitProcess(1)
+                        }
+                    }
+                }
+            }
+
+            launch {
+                testFlow.collect {
+                    testTriple = it
                 }
             }
         }
     }
 
-    fun setWaitTillEndValue(){
+    fun setWaitTillEndValue() {
         viewModelScope.launch {
-            shouldWaitTillEndFlow.collect{
+            shouldWaitTillEndFlow.collect {
                 shouldWaitTillEndValue = it
             }
         }
@@ -136,38 +153,28 @@ class BottomBarViewModel @Inject constructor(
         }
     }
 
+    private fun handleTimerFinishAction(song: Song, currNum: Int?) {
+        if (shouldWaitTillEndValue != null && !shouldWaitTillEndValue!!) {
+            playOrToggleSong(mediaItem = song, toggle = true)
+            exitProcess(1)
+        } else {
+            testPair.value = Triple(currNum, shouldWaitTillEndValue, song)
+        }
+    }
+
     fun setTimer(sleepTime: Int, song: Song) {
+        var currentEndNum = songEndNums
+        d("ntag", currentEndNum.toString())
 
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-
-                val timer = Timer()
-                val pauseTask = object : TimerTask() {
-                    override fun run() {
-                        playOrToggleSong(mediaItem = song, toggle = true)
-                    }
-                }
-
-                val killTask = object : TimerTask() {
-                    override fun run() {
-                        exitProcess(1)
-                    }
-
-                }
-
-                timer.run {
-                    if (song.duration <= sleepTime * 60000.toLong()) {
-                        schedule(killTask, (sleepTime * 60000 + 1000).toLong())
-                        d("myTag", "kill $sleepTime")
-                    } else {
-                        schedule(pauseTask, sleepTime * 60000.toLong())
-                        d("myTag", "pause $sleepTime")
-                        schedule(killTask, (sleepTime * 60000 + 1000).toLong())
-                    }
-                }
+        countDownTimer = object : CountDownTimer(sleepTime * 60000.toLong(), 1000) {
+            override fun onTick(p0: Long) {
+                currentEndNum = songEndNums
             }
 
-        }
+            override fun onFinish() {
+                handleTimerFinishAction(song = song, currNum = currentEndNum)
+            }
+        }.start()
 
 
     }
@@ -177,5 +184,8 @@ class BottomBarViewModel @Inject constructor(
         musicServiceConnection.unsubscribe(
             MEDIA_ROOT_ID,
             object : MediaBrowserCompat.SubscriptionCallback() {})
+        if (countDownTimer != null) {
+            countDownTimer?.cancel()
+        }
     }
 }

@@ -67,7 +67,7 @@ fun SleepTimerDialog(
                                     selected = (text == selectedOption),
                                     onClick = {
                                         onOptionSelected(text)
-                                        },
+                                    },
                                     role = Role.RadioButton
                                 )
                                 .padding(horizontal = 16.dp),
@@ -112,7 +112,7 @@ fun SleepTimerDialog(
                     onClick = {
                         isOpen.value = false
                         bottomBarViewModel.setTimer(
-                            sleepTime = handleSelectedTime(selectedOption, bottomBarViewModel),
+                            sleepTime = handleSelectedTime(selectedOption),
                             song = song
                         )
                         bottomBarViewModel.shouldWaitTillEndFlow.value = checkedState
@@ -137,35 +137,21 @@ fun SleepTimerDialog(
 }
 
 
-private fun handleSelectedTime(chosenText: String, bottomBarViewModel: BottomBarViewModel): Int {
+private fun handleSelectedTime(chosenText: String): Int {
     return when (chosenText) {
-        TimerValues.FIVE_MINUTES.stringValue -> TimerValues.FIVE_MINUTES.minutesValue.also { selectedTime ->
-            bottomBarViewModel._selectedTime.postValue(selectedTime)
-        }
+        TimerValues.FIVE_MINUTES.stringValue -> TimerValues.FIVE_MINUTES.minutesValue
 
-        TimerValues.TEN_MINUTES.stringValue -> TimerValues.TEN_MINUTES.minutesValue.also { selectedTime ->
-            bottomBarViewModel._selectedTime.postValue(selectedTime)
-        }
+        TimerValues.TEN_MINUTES.stringValue -> TimerValues.TEN_MINUTES.minutesValue
 
-        TimerValues.FIFTEEN_MINUTES.stringValue -> TimerValues.FIFTEEN_MINUTES.minutesValue.also { selectedTime ->
-            bottomBarViewModel._selectedTime.postValue(selectedTime)
-        }
+        TimerValues.FIFTEEN_MINUTES.stringValue -> TimerValues.FIFTEEN_MINUTES.minutesValue
 
-        TimerValues.THIRTY_MINUTES.stringValue -> TimerValues.THIRTY_MINUTES.minutesValue.also { selectedTime ->
-            bottomBarViewModel._selectedTime.postValue(selectedTime)
-        }
+        TimerValues.THIRTY_MINUTES.stringValue -> TimerValues.THIRTY_MINUTES.minutesValue
 
-        TimerValues.FORTY_FIVE_MINUTES.stringValue -> TimerValues.FORTY_FIVE_MINUTES.minutesValue.also { selectedTime ->
-            bottomBarViewModel._selectedTime.postValue(selectedTime)
-        }
+        TimerValues.FORTY_FIVE_MINUTES.stringValue -> TimerValues.FORTY_FIVE_MINUTES.minutesValue
 
-        TimerValues.ONE_HOUR.stringValue -> TimerValues.ONE_HOUR.minutesValue.also { selectedTime ->
-            bottomBarViewModel._selectedTime.postValue(selectedTime)
-        }
+        TimerValues.ONE_HOUR.stringValue -> TimerValues.ONE_HOUR.minutesValue
 
-        else -> TimerValues.FIVE_MINUTES.minutesValue.also { selectedTime ->
-            bottomBarViewModel._selectedTime.postValue(selectedTime)
-        }
+        else -> TimerValues.FIVE_MINUTES.minutesValue
     }
 }
 

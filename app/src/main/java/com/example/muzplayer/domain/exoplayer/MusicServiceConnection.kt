@@ -25,6 +25,7 @@ class MusicServiceConnection @Inject constructor(
 
     val songEndCounter = MutableStateFlow(0)
 
+
     private lateinit var mediaController: MediaControllerCompat
 
     val transportController: MediaControllerCompat.TransportControls
