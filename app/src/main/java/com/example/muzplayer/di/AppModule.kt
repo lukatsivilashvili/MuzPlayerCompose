@@ -45,6 +45,7 @@ object AppModule {
     @Provides
     fun provideContext(application: Application): Context = application.applicationContext
 
+    @Singleton
     @Provides
     fun provideMusicDatabase() = MediaStoreLoader
     @Provides

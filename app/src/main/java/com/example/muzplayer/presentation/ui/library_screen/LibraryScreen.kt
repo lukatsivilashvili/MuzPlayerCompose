@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.muzplayer.presentation.components.MusicItem
 import com.example.muzplayer.domain.models.Song
+import com.example.muzplayer.presentation.components.music_item.MusicItem
 
 @Composable
 fun LibraryBody(

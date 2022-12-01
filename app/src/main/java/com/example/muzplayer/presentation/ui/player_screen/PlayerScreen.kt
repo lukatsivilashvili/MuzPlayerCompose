@@ -25,10 +25,11 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Bedtime
+import androidx.compose.material.icons.rounded.BedtimeOff
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.PlayCircle
-import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.ShuffleOn
 import androidx.compose.material.icons.rounded.SkipNext
@@ -38,8 +39,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -58,6 +59,7 @@ import com.example.muzplayer.common.extensions.toSong
 import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.components.CrossFadeIcon
 import com.example.muzplayer.presentation.components.CustomCoilImage
+import com.example.muzplayer.presentation.components.sleep_timer.SleepTimerDialog
 import com.example.muzplayer.presentation.ui.bottom_bar.BottomBarViewModel
 import kotlinx.coroutines.launch
 
@@ -73,8 +75,8 @@ fun PlayerScreen(
     bottomBarViewModel: BottomBarViewModel = hiltViewModel(),
     playerScreenViewModel: PlayerScreenViewModel = hiltViewModel()
 ) {
-    val song = bottomBarViewModel.currentPlayingSong.value
-    val songModel = song.let { it?.toSong() }
+    val song = bottomBarViewModel.currentPlayingSongScreen.collectAsState()
+    val songModel = song.value?.toSong()
 
     PlayerScreenBody(
         modifier = Modifier,
@@ -100,7 +102,9 @@ fun PlayerScreenBody(
     var localSliderValue by remember { mutableStateOf(0f) }
 
     val sliderProgress =
-        if (sliderIsChanging) localSliderValue else playerScreenViewModel.getCurrentPlayerPosition(song?.duration)
+        if (sliderIsChanging) localSliderValue else playerScreenViewModel.getCurrentPlayerPosition(
+            song?.duration
+        )
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -141,7 +145,8 @@ fun PlayerScreenBody(
                     androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
                 )
         ) {
-            val playbackStateCompat by bottomBarViewModel.playbackState.observeAsState()
+            val playbackStateCompat = bottomBarViewModel.playbackState.value
+            val openDialog = remember { mutableStateOf(false) }
 
             PlayerScreenImage(songModel = song)
             PlayerScreenNames(songModel = song, modifier = modifier.padding(top = 16.dp))
@@ -172,8 +177,20 @@ fun PlayerScreenBody(
                     bottomBarViewModel.shufflePlaylist(bottomBarViewModel.shuffleStates.value)
                 },
                 playbackStateCompat = playbackStateCompat,
-                viewModel = bottomBarViewModel
+                viewModel = bottomBarViewModel,
+                openDialog = { openDialog.value = true }
             )
+
+            if (openDialog.value) {
+
+                if (song != null) {
+                    SleepTimerDialog(
+                        isOpen = openDialog,
+                        bottomBarViewModel = bottomBarViewModel,
+                        song = song
+                    )
+                }
+            }
         }
         LaunchedEffect("playbackPosition") {
             playerScreenViewModel.updateCurrentPlaybackPosition()
@@ -271,7 +288,8 @@ fun PlayerControls(
     playNextSong: () -> Unit,
     playPreviousSong: () -> Unit,
     playOrToggleSong: () -> Unit,
-    shuffleSongs: () -> Unit
+    shuffleSongs: () -> Unit,
+    openDialog: () -> Unit
 ) {
 
     Row(
@@ -300,7 +318,7 @@ fun PlayerControls(
             tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = modifier
                 .clip(RoundedCornerShape(30.dp))
-                .clickable{
+                .clickable {
                     playPreviousSong.invoke()
                 }
                 .clip(CircleShape)
@@ -316,7 +334,7 @@ fun PlayerControls(
             contentDescription = "Play-Pause",
             iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             onClickAction = { playOrToggleSong.invoke() },
-            paddingSize = 8.dp,
+            paddingSize = 0.dp,
             size = 90.dp
         )
 
@@ -334,15 +352,16 @@ fun PlayerControls(
                 .size(45.dp)
         )
 
-        Icon(
-            imageVector = Icons.Rounded.Repeat,
-            contentDescription = "Repeat Song",
-            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
-            modifier = modifier
-
-                .clip(CircleShape)
-                .padding(16.dp)
-                .size(30.dp)
+        CrossFadeIcon(
+            targetState = false,
+            modifier = modifier,
+            iconVectorDisabled = Icons.Rounded.Bedtime,
+            iconVectorEnabled = Icons.Rounded.BedtimeOff,
+            contentDescription = "Sleep-Timer",
+            iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+            onClickAction = { openDialog.invoke() },
+            paddingSize = 16.dp,
+            size = 30.dp
         )
     }
 }

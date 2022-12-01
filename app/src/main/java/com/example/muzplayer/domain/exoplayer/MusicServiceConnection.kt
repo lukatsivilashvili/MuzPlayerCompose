@@ -8,23 +8,23 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.muzplayer.common.Event
 import com.example.muzplayer.common.Resource
+import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
-class MusicServiceConnection(
+class MusicServiceConnection @Inject constructor(
     context: Context
 ) {
     private val _isConnected = MutableLiveData<Event<Resource<Boolean>>>()
 
-    private val _playbackState = MutableLiveData<PlaybackStateCompat?>()
-    val playbackState: LiveData<PlaybackStateCompat?> = _playbackState
+    val playbackState = mutableStateOf<PlaybackStateCompat?>(null)
 
-    var currentPlayingSong = mutableStateOf<MediaMetadataCompat?>(null)
+    val currentPlayingSong = MutableStateFlow<MediaMetadataCompat?>(null)
 
-    private val _nowPlaying = MutableLiveData<MediaMetadataCompat?>()
-    val nowPlaying: LiveData<MediaMetadataCompat?> = _nowPlaying
+    val songEndCounter = MutableStateFlow(0)
+
 
     private lateinit var mediaController: MediaControllerCompat
 
@@ -91,13 +91,12 @@ class MusicServiceConnection(
     private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
 
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-            _playbackState.postValue(state)
+            playbackState.value = state
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             super.onMetadataChanged(metadata)
             currentPlayingSong.value = metadata
-            _nowPlaying.postValue(metadata)
         }
 
         override fun onSessionEvent(event: String?, extras: Bundle?) {

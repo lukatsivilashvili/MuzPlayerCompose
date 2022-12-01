@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,8 +52,8 @@ fun HomeBottomBar(
 ) {
 
     var offsetX by remember { mutableStateOf(0f) }
-    val currentSong = viewModel.currentPlayingSong.value
-    val playbackStateCompat by viewModel.playbackState.observeAsState()
+    val currentSong = viewModel.currentPlayingSong
+    val playbackStateCompat = viewModel.playbackState.value
 
     AnimatedVisibility(
         visible = currentSong != null,

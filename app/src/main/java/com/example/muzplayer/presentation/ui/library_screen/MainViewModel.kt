@@ -26,9 +26,9 @@ class MainViewModel @Inject constructor(
 
     var mediaItems = MutableStateFlow<List<Song>>(emptyList())
 
-    val currentPlayingSong = musicServiceConnection.currentPlayingSong
+    private val currentPlayingSong = musicServiceConnection.currentPlayingSong
 
-    val playbackState = musicServiceConnection.playbackState
+    private val playbackState = musicServiceConnection.playbackState
 
     init {
         loadLibraryContent()
