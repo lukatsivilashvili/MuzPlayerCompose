@@ -1,5 +1,3 @@
-@file:JvmName("TextFieldWithoutPaddingKt")
-
 package com.example.muzplayer.presentation.components.search_textfield
 
 /**
@@ -13,5 +11,5 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun TextFieldWithoutPaddingPreview() {
-    TextFieldWithoutPadding(placeholder = "Search", value = "asda", onValueChange = {}, modifier = Modifier)
+    TextFieldWithoutPadding(placeholder = "Search", value = "asda", onValueChange = {}, modifier = Modifier, onImeSearch = {})
 }
