@@ -10,7 +10,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetState
@@ -26,7 +25,6 @@ import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
@@ -48,6 +46,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.muzplayer.common.MusicScreen
 import com.example.muzplayer.presentation.components.BottomNavigationBar
+import com.example.muzplayer.presentation.components.search_textfield.TextFieldWithoutPadding
 import com.example.muzplayer.presentation.ui.bottom_bar.HomeBottomBar
 import com.example.muzplayer.presentation.ui.home_screen.HomeBody
 import com.example.muzplayer.presentation.ui.library_screen.LibraryBody
@@ -132,12 +131,12 @@ fun MainActivityScreen(
                     CenterAlignedTopAppBar(
                         title = {
                             Row(
+                                verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .padding(start = 16.dp, end = 16.dp)
                             ) {
                                 Text(
                                     modifier = Modifier
-                                        .align(Alignment.CenterVertically)
                                         .padding(end = 24.dp),
                                     text = currentScreen.name,
                                     color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
@@ -147,16 +146,16 @@ fun MainActivityScreen(
                                     style = androidx.compose.material3.MaterialTheme.typography.titleLarge
                                 )
 
-                                AnimatedVisibility(visible = expanded) {
-                                    OutlinedTextField(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(0.dp),
-                                        singleLine = true,
-                                        value = text,
-                                        onValueChange = { text = it },
-                                        textStyle = androidx.compose.material3.MaterialTheme.typography.bodyMedium
-                                    )
+                                if (currentScreen.name == "Library"){
+                                    AnimatedVisibility(visible = expanded) {
+                                        TextFieldWithoutPadding(
+                                            modifier = Modifier,
+                                            placeholder = "Search",
+                                            value = text,
+                                            onValueChange = {
+                                                text = it
+                                            })
+                                    }
                                 }
                             }
 
