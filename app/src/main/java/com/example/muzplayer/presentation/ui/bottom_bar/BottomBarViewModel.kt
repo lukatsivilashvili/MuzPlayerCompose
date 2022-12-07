@@ -28,7 +28,6 @@ class BottomBarViewModel @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection
 ) : ViewModel() {
 
-    private val testPair = MutableStateFlow(Triple<Int?, Boolean?, Song?>(0, false, null))
 
     val currentPlayingSongScreen: MutableStateFlow<MediaMetadataCompat?> =
         musicServiceConnection.currentPlayingSong
@@ -36,7 +35,8 @@ class BottomBarViewModel @Inject constructor(
         musicServiceConnection.currentPlayingSong
     private val songEndFLow: MutableStateFlow<Int> = musicServiceConnection.songEndCounter
 
-    private val testFlow: MutableStateFlow<Triple<Int?, Boolean?, Song?>> = testPair
+    private val shouldStopTriple = MutableStateFlow(Triple<Int?, Boolean?, Song?>(0, false, null))
+    private val shouldStopFlow: MutableStateFlow<Triple<Int?, Boolean?, Song?>> = shouldStopTriple
 
     var currentPlayingSong: MediaMetadataCompat? = null
     val playbackState = musicServiceConnection.playbackState
@@ -88,7 +88,7 @@ class BottomBarViewModel @Inject constructor(
             }
 
             launch {
-                testFlow.collect {
+                shouldStopFlow.collect {
                     testTriple = it
                 }
             }
@@ -158,7 +158,7 @@ class BottomBarViewModel @Inject constructor(
             playOrToggleSong(mediaItem = song, toggle = true)
             exitProcess(1)
         } else {
-            testPair.value = Triple(currNum, shouldWaitTillEndValue, song)
+            shouldStopTriple.value = Triple(currNum, shouldWaitTillEndValue, song)
         }
     }
 

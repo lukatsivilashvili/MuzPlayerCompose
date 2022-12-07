@@ -34,9 +34,10 @@ class MainViewModel @Inject constructor(
         loadLibraryContent()
     }
 
-    private fun loadLibraryContent() = viewModelScope.launch(Dispatchers.IO){
+    private fun loadLibraryContent() = viewModelScope.launch(Dispatchers.IO) {
         fetchSongs()
     }
+
     private suspend fun fetchSongs() {
         val allSongs = musicSource.fetchSongData()
         Log.d("items", allSongs.toString())
@@ -53,15 +54,30 @@ class MainViewModel @Inject constructor(
                     playbackState.isPlaying -> {
                         if (toggle) musicServiceConnection.transportController.pause()
                     }
+
                     playbackState.isPlayEnabled -> {
                         musicServiceConnection.transportController.play()
                     }
+
                     else -> Unit
                 }
             }
         } else {
             musicServiceConnection.transportController.playFromMediaId(mediaItem.mediaId, null)
         }
+    }
+
+    fun searchSong(songsList: List<Song>, query: String): Int {
+        var index = 0
+        viewModelScope.launch {
+            for (i in songsList) {
+                if (i.title.contains(other = query, ignoreCase = true)) {
+                    index = songsList.indexOf(i)
+                    break
+                }
+            }
+        }
+        return index
     }
 
     override fun onCleared() {

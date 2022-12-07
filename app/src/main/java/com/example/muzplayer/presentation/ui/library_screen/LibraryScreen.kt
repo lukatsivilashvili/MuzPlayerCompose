@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -17,7 +18,8 @@ import com.example.muzplayer.presentation.components.music_item.MusicItem
 
 @Composable
 fun LibraryBody(
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = hiltViewModel(),
+    listState: LazyListState
 ) {
     val songs = viewModel.mediaItems.collectAsState()
     Box(
@@ -25,16 +27,18 @@ fun LibraryBody(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
     ) {
-        HomeContent(music = songs.value, viewModel = viewModel)
+        HomeContent(music = songs.value, viewModel = viewModel, listState = listState)
     }
 }
 
 @Composable
 fun HomeContent(
     music: List<Song>,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    listState: LazyListState
 ) {
     LazyColumn(
+        state = listState,
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)

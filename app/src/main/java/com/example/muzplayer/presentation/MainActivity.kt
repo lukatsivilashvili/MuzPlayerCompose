@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -28,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -50,11 +55,13 @@ import com.example.muzplayer.presentation.components.search_textfield.TextFieldW
 import com.example.muzplayer.presentation.ui.bottom_bar.HomeBottomBar
 import com.example.muzplayer.presentation.ui.home_screen.HomeBody
 import com.example.muzplayer.presentation.ui.library_screen.LibraryBody
+import com.example.muzplayer.presentation.ui.library_screen.MainViewModel
 import com.example.muzplayer.presentation.ui.player_screen.PlayerScreen
 import com.example.muzplayer.presentation.ui.playlist_screen.PlaylistBody
 import com.example.muzplayer.presentation.ui.theme.MuzPlayerTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -75,6 +82,7 @@ class MainActivity : ComponentActivity() {
 fun MainActivityScreen(
     backPressedDispatcher: OnBackPressedDispatcher
 ) {
+    val mainViewModel: MainViewModel = hiltViewModel()
     val allScreens = MusicScreen.values().toList()
     val navController = rememberNavController()
     val backstackEntry = navController.currentBackStackEntryAsState()
@@ -84,18 +92,7 @@ fun MainActivityScreen(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
     val coroutineScope = rememberCoroutineScope()
-
-    fun showBottomSheet() {
-        coroutineScope.launch {
-
-            if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                bottomSheetScaffoldState.bottomSheetState.expand()
-            } else {
-                bottomSheetScaffoldState.bottomSheetState.collapse()
-            }
-        }
-    }
-
+    val songs = mainViewModel.mediaItems.collectAsState().value
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -112,6 +109,7 @@ fun MainActivityScreen(
             sheetPeekHeight = 0.dp
         ) {
             val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+            val listState = rememberLazyListState()
 
             Scaffold(
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -146,12 +144,19 @@ fun MainActivityScreen(
                                     style = androidx.compose.material3.MaterialTheme.typography.titleLarge
                                 )
 
-                                if (currentScreen.name == "Library"){
+                                if (currentScreen.name == "Library") {
                                     AnimatedVisibility(visible = expanded) {
                                         TextFieldWithoutPadding(
                                             modifier = Modifier,
                                             placeholder = "Search",
                                             value = text,
+                                            onImeSearch = {
+                                                val newIndex = mainViewModel.searchSong(songs, text)
+                                                coroutineScope.launch {
+                                                    listState.scrollToItem(newIndex)
+                                                }
+
+                                            },
                                             onValueChange = {
                                                 text = it
                                             })
@@ -194,10 +199,19 @@ fun MainActivityScreen(
                         .padding(innerPadding)
                         .fillMaxSize()
                 ) {
-                    MusicNavHost(navController, modifier = Modifier.padding(bottom = 64.dp))
+                    MusicNavHost(
+                        navController,
+                        modifier = Modifier.padding(bottom = 64.dp),
+                        listState = listState
+                    )
                     HomeBottomBar(
                         modifier = Modifier.align(Alignment.BottomCenter),
-                        onBottomBarClick = { showBottomSheet() })
+                        onBottomBarClick = {
+                            showBottomSheet(
+                                bottomSheetScaffoldState = bottomSheetScaffoldState,
+                                coroutineScope = coroutineScope
+                            )
+                        })
                 }
             }
         }
@@ -206,7 +220,11 @@ fun MainActivityScreen(
 
 
 @Composable
-fun MusicNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
+fun MusicNavHost(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    listState: LazyListState
+) {
     NavHost(
         navController = navController,
         startDestination = MusicScreen.Home.name,
@@ -216,7 +234,7 @@ fun MusicNavHost(navController: NavHostController, modifier: Modifier = Modifier
             HomeBody()
         }
         composable(MusicScreen.Library.name) {
-            LibraryBody()
+            LibraryBody(listState = listState)
         }
         composable(MusicScreen.Playlists.name) {
             PlaylistBody()
@@ -237,4 +255,19 @@ private fun setStatusColor() {
     systemUiController.setNavigationBarColor(
         color = androidx.compose.material3.MaterialTheme.colorScheme.surface
     )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+fun showBottomSheet(
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
+    coroutineScope: CoroutineScope
+) {
+    coroutineScope.launch {
+
+        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+            bottomSheetScaffoldState.bottomSheetState.expand()
+        } else {
+            bottomSheetScaffoldState.bottomSheetState.collapse()
+        }
+    }
 }
