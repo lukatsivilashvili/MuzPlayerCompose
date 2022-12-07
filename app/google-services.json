@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "750999793757",
+    "project_id": "muzplayer-409a3",
+    "storage_bucket": "muzplayer-409a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750999793757:android:4323a9de8d1edfa268ddb4",
+        "android_client_info": {
+          "package_name": "com.example.muzplayer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "750999793757-g3taam34oflpcoblpiuao0vd2hulniob.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.muzplayer",
+            "certificate_hash": "5e8c0799cbadad379a1ed9bc0d7e691d3da6630a"
+          }
+        },
+        {
+          "client_id": "750999793757-8aa242cvp1enulhp7e60vq2hi0j9ttrc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCGuEWEmrpN9pa-N3Dp9RC3wEUwxDu9U8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "750999793757-8aa242cvp1enulhp7e60vq2hi0j9ttrc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
