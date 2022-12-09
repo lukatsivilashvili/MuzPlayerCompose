@@ -50,7 +50,7 @@ fun MusicItem(
             contentAlignment = Alignment.Center
         )
         {
-            CustomCoilImage(uri = if (music.hasArt) music.imageUrl else null)
+            CustomCoilImage(uri = music.imageUrl)
         }
         Column(modifier = Modifier.weight(1f)) {
             Text(

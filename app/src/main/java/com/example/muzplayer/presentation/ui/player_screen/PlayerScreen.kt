@@ -242,7 +242,6 @@ fun PlayerScreenImage(
         CustomCoilImage(
             uri = songModel?.imageUrl,
             modifier = modifier
-                .background(androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer)
                 .fillMaxWidth()
         )
     }
