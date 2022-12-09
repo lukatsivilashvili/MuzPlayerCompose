@@ -2,7 +2,6 @@ package com.example.muzplayer.presentation.ui.library_screen
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.muzplayer.common.Constants.MEDIA_ROOT_ID
@@ -40,7 +39,6 @@ class MainViewModel @Inject constructor(
 
     private suspend fun fetchSongs() {
         val allSongs = musicSource.fetchSongData()
-        Log.d("items", allSongs.toString())
         mediaItems.value = allSongs
     }
 

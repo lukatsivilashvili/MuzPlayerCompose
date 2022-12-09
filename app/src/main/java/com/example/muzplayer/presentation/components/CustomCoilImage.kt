@@ -1,6 +1,8 @@
 package com.example.muzplayer.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -17,14 +19,15 @@ fun CustomCoilImage(
 ) {
     AsyncImage(
         modifier = modifier
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .background(MaterialTheme.colorScheme.secondaryContainer),
         contentScale = ContentScale.Crop,
         model = ImageRequest.Builder(LocalContext.current)
             .data(uri)
-            .fallback(R.drawable.ic_default_artwork256)
+            .fallback(R.drawable.ic_default_artwork32)
             .crossfade(true)
             .build(),
-        placeholder = painterResource(R.drawable.ic_default_artwork256),
+        error = painterResource(R.drawable.ic_default_artwork32),
         contentDescription = "Music Art",
     )
 }

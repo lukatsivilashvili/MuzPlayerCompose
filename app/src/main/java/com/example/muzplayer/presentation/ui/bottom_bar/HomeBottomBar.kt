@@ -89,7 +89,7 @@ fun HomeBottomBar(
                     ),
             ) {
                 HomeBottomBarItem(
-                    song = song!!,
+                    song = song,
                     playbackStateCompat = playbackStateCompat,
                     viewModel = viewModel,
                     onClickEvent = {onBottomBarClick.invoke()}
@@ -130,7 +130,9 @@ fun HomeBottomBarItem(
                     .clip(RoundedCornerShape(5.dp)),
                 contentAlignment = Alignment.Center
             )
-            { CustomCoilImage(uri = if (song.hasArt) song.imageUrl else null) }
+            {
+                CustomCoilImage(uri = song.imageUrl)
+            }
             Column(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier

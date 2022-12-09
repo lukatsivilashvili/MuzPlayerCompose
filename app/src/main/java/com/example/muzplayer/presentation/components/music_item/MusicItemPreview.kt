@@ -45,7 +45,7 @@ fun MusicItemPreview(
                 .clip(RoundedCornerShape(5.dp)),
             contentAlignment = Alignment.Center
         )
-        { CustomCoilImage(uri = if (music.hasArt) music.imageUrl else null) }
+        { CustomCoilImage(uri = music.imageUrl) }
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = music.title,
