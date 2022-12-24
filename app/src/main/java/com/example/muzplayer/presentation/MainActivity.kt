@@ -227,14 +227,14 @@ fun MusicNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = MusicScreen.Home.name,
+        startDestination = MusicScreen.Library.name,
         modifier = modifier
     ) {
-        composable(MusicScreen.Home.name) {
-            HomeBody()
-        }
         composable(MusicScreen.Library.name) {
             LibraryBody(listState = listState)
+        }
+        composable(MusicScreen.Album.name) {
+            HomeBody()
         }
         composable(MusicScreen.Playlists.name) {
             PlaylistBody()

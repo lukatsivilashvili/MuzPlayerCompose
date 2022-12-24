@@ -48,9 +48,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.muzplayer.common.extensions.formatDuration
@@ -125,12 +125,12 @@ fun PlayerScreenBody(
             .background(
                 androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
             )
-            .padding(start = 16.dp, end = 16.dp, bottom = 64.dp),
+            .padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
 
         ) {
         PlayerScreenCloseIcon(
             modifier = modifier
-                .padding(start = 8.dp, bottom = 32.dp, top = 32.dp),
+                .padding(start = 8.dp, bottom = 16.dp, top = 16.dp),
             onClose = {
                 coroutineScope.launch {
                     bottomSheetScaffoldState.bottomSheetState.collapse()
@@ -229,12 +229,14 @@ fun PlayerScreenCloseIcon(
 fun PlayerScreenImage(
     modifier: Modifier = Modifier,
     songModel: Song?,
-    compSize: Dp = 320.dp
 ) {
+    val configuration = LocalConfiguration.current
+
+    val screenHeight = configuration.screenWidthDp.dp.times(0.75f)
     Box(
-        modifier = modifier
-            .width(compSize)
-            .height(compSize)
+        modifier = Modifier
+            .width(screenHeight)
+            .height(screenHeight)
             .clip(RoundedCornerShape(5.dp)),
         contentAlignment = Alignment.Center
     )

@@ -13,7 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.muzplayer.domain.MediaType
+import com.example.muzplayer.domain.models.Album
 import com.example.muzplayer.domain.models.Song
+import com.example.muzplayer.presentation.components.album_item.AlbumItem
 import com.example.muzplayer.presentation.components.music_item.MusicItem
 
 @Composable
@@ -27,13 +30,14 @@ fun LibraryBody(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
     ) {
-        HomeContent(music = songs.value, viewModel = viewModel, listState = listState)
+        HomeContent(data = songs.value, viewModel = viewModel, listState = listState, dataType = MediaType.SONG)
     }
 }
 
 @Composable
-fun HomeContent(
-    music: List<Song>,
+fun<T> HomeContent(
+    data: List<T>,
+    dataType: MediaType,
     viewModel: MainViewModel,
     listState: LazyListState
 ) {
@@ -43,9 +47,19 @@ fun HomeContent(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        items(music) { musicItem ->
-            MusicItem(music = musicItem, viewModel = viewModel)
+        when(dataType){
+            MediaType.SONG -> {
+                items(data) { musicItem ->
+                    MusicItem(music = musicItem as Song, viewModel = viewModel)
+                }
+            }
+            MediaType.ALBUM -> {
+                items(data) { musicItem ->
+                    AlbumItem(album = musicItem as Album)
+                }
+            }
         }
+
 
     }
 }

@@ -31,6 +31,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +42,7 @@ import com.example.muzplayer.presentation.components.CustomCoilImage
  * Created by ltsivilashvili on 14.09.22
  */
 
-@Preview(name = "PIXEL_3_XL", device = Devices.PIXEL_3_XL)
+@Preview(name = "PIXEL_XL", device = Devices.PIXEL_3_XL)
 @Composable
 fun PlayerScreenBodyPreview(
     modifier: Modifier = Modifier,
@@ -50,7 +51,7 @@ fun PlayerScreenBodyPreview(
         modifier = modifier
             .fillMaxSize()
             .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
-            .padding(start = 16.dp, end = 16.dp, bottom = 64.dp),
+            .padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
     ) {
         PlayerScreenCloseIconPreview()
         PlayerScreenImagePreview()
@@ -79,10 +80,13 @@ fun PlayerScreenCloseIconPreview(
 fun PlayerScreenImagePreview(
     modifier: Modifier = Modifier
 ) {
+    val configuration = LocalConfiguration.current
+
+    val screenHeight = configuration.screenWidthDp.dp
     Box(
         modifier = Modifier
-            .width(400.dp)
-            .height(400.dp)
+            .width(screenHeight)
+            .height(screenHeight)
             .clip(RoundedCornerShape(5.dp)),
         contentAlignment = Alignment.Center
     )

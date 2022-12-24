@@ -4,16 +4,26 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import com.example.muzplayer.domain.MediaType
+import com.example.muzplayer.domain.models.Album
 import com.example.muzplayer.domain.models.Song
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object MediaStoreLoader {
     private val musicItems = mutableListOf<Song>()
+    private val albumItems = mutableListOf<Album>()
 
     private var initialized = false
 
-    suspend fun initializeListIfNeeded(context: Context): List<Song> {
+    suspend fun <T> initializeListIfNeeded(context: Context, typeOfMedia: MediaType): List<T> {
+        return when (typeOfMedia) {
+            MediaType.SONG -> initializeSongList(context) as List<T>
+            MediaType.ALBUM -> initializeAlbumList(context) as List<T>
+        }
+    }
+
+    private suspend fun initializeSongList(context: Context): List<Song> {
         musicItems.clear()
         withContext(Dispatchers.IO) {
             val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
@@ -73,5 +83,55 @@ object MediaStoreLoader {
             initialized = true
         }
         return musicItems
+    }
+
+    private suspend fun initializeAlbumList(context: Context): List<Album> {
+        musicItems.clear()
+        withContext(Dispatchers.IO) {
+            val collection = MediaStore.Audio.Albums.getContentUri(MediaStore.VOLUME_EXTERNAL)
+            val sortOrder = "${MediaStore.Audio.Albums.ALBUM} ASC"
+            val projection = arrayOf(
+                MediaStore.Audio.Media.ALBUM_ID,
+                MediaStore.Audio.Albums.ALBUM,
+                MediaStore.Audio.Albums.ARTIST,
+                MediaStore.Audio.Albums.NUMBER_OF_SONGS
+            )
+            val query = context.contentResolver.query(
+                /* uri = */ collection,
+                /* projection = */ projection,
+                /* selection = */ null,
+                /* selectionArgs = */ null,
+                /* sortOrder = */ sortOrder,
+                /* cancellationSignal = */ null
+            )
+            query?.use { cursor ->
+                val titleColumn =
+                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
+                val artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ARTIST)
+                val songCount =
+                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.NUMBER_OF_SONGS)
+                val albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+
+                while (cursor.moveToNext()) {
+                    val title = cursor.getString(titleColumn)
+                    val artist = cursor.getString(artistColumn)
+                    val albumId = cursor.getLong(albumIdColumn).toString()
+                    val uri = Uri.parse("content://media/external/audio/albumart")
+                    val artUri = Uri.withAppendedPath(uri, albumId).toString()
+
+                    albumItems.add(
+                        Album(
+                            title = title,
+                            artist = artist,
+                            albumId = albumId,
+                            imageUrl = artUri,
+                            songCount = songCount
+                        )
+                    )
+                }
+            }
+            initialized = true
+        }
+        return albumItems
     }
 }
