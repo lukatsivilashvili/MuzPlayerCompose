@@ -28,10 +28,6 @@ android {
         release {
             def tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
             def allFilesFromDir = new File(tmpFilePath).listFiles()
-            storeFile file('D:\\MainFiles\\Projects\\StudioProjects\\Keystore\\upload-keystore.jks')
-            storePassword 'Naruto2002python'
-            keyAlias 'muzCompose'
-            keyPassword 'Naruto2002python'
 
             if (allFilesFromDir != null) {
                 def keystoreFile = allFilesFromDir.first()
