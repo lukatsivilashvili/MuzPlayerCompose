@@ -12,7 +12,8 @@ import kotlinx.coroutines.withContext
 
 object MediaStoreLoader {
     private val musicItems = mutableListOf<Song>()
-    private val albumItems = mutableListOf<Album>()
+    private var albumItems = listOf<Album>()
+    private val albumSet = mutableSetOf<Album>()
 
     private var initialized = false
 
@@ -119,7 +120,7 @@ object MediaStoreLoader {
                     val uri = Uri.parse("content://media/external/audio/albumart")
                     val artUri = Uri.withAppendedPath(uri, albumId).toString()
 
-                    albumItems.add(
+                    albumSet.add(
                         Album(
                             title = title,
                             artist = artist,
@@ -130,6 +131,7 @@ object MediaStoreLoader {
                     )
                 }
             }
+            albumItems = albumSet.toList()
             initialized = true
         }
         return albumItems

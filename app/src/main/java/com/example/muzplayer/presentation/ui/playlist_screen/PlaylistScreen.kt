@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import com.example.muzplayer.presentation.components.SinglePermission
 
 @Composable
-fun PlaylistBody() {
+fun PlaylistScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()

@@ -21,6 +21,7 @@ import com.example.muzplayer.domain.exoplayer.State.STATE_CREATED
 import com.example.muzplayer.domain.exoplayer.State.STATE_ERROR
 import com.example.muzplayer.domain.exoplayer.State.STATE_INITIALIZED
 import com.example.muzplayer.domain.exoplayer.State.STATE_INITIALIZING
+import com.example.muzplayer.domain.models.Album
 import com.example.muzplayer.domain.models.Song
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
@@ -61,6 +62,13 @@ class MusicSource @Inject constructor(
             val allSongs = repository.getAllSongs()
             state = STATE_INITIALIZED
         return allSongs
+    }
+
+    suspend fun fetchAlbumData(): List<Album> {
+        state = STATE_INITIALIZING
+        val allAlbums = repository.getAllAlbums()
+        state = STATE_INITIALIZED
+        return allAlbums
     }
 
     fun asMediaSource(dataSourceFactory: DefaultDataSource.Factory): ConcatenatingMediaSource {

@@ -18,7 +18,7 @@ enum class MusicScreen(
         unselectedIcon = Icons.Outlined.Audiotrack
 
     ),
-    Album(
+    Albums(
         selectedIcon = Icons.Filled.Album,
         unselectedIcon = Icons.Outlined.Album
     ),
@@ -30,7 +30,7 @@ enum class MusicScreen(
     companion object {
         fun fromRoute(route: String?): MusicScreen =
             when (route?.substringBefore("/")) {
-                Album.name -> Album
+                Albums.name -> Albums
                 Library.name -> Library
                 Playlists.name -> Playlists
                 null -> Library
