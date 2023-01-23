@@ -1,14 +1,15 @@
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.muzplayer.domain.models.Album
 import com.example.muzplayer.presentation.components.album_item.AlbumItem
@@ -17,29 +18,26 @@ import com.example.muzplayer.presentation.ui.album_screen.AlbumScreenViewModel
 @Composable
 fun AlbumScreen(
     viewModel: AlbumScreenViewModel = hiltViewModel(),
-    listState: LazyListState
 ) {
-    val albums = viewModel.albumItems.collectAsState()
+    val songs = viewModel.albumItems.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
     ) {
-        AlbumsContent(data = albums.value, viewModel = viewModel, listState = listState)
+        AlbumScreenContent(data = songs.value,)
     }
 }
 
 @Composable
-fun AlbumsContent(
+fun AlbumScreenContent(
     data: List<Album>,
-    viewModel: AlbumScreenViewModel,
-    listState: LazyListState
 ) {
-    LazyColumn(
-        state = listState,
+    LazyVerticalGrid(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        columns = GridCells.Adaptive(minSize = 200.dp)
     ) {
         items(data) { musicItem ->
             AlbumItem(album = musicItem)

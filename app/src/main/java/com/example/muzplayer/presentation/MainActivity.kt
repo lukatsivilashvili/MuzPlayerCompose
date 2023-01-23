@@ -117,7 +117,7 @@ fun MainActivityScreen(
                     BottomNavigationBar(
                         allScreens = allScreens,
                         onItemSelected = { screen ->
-                            navController.navigate(screen.name)
+                            navController.navigate(route = screen.name)
                         },
                         currentScreen = currentScreen
                     )
@@ -232,7 +232,7 @@ fun MusicNavHost(
             LibraryScreen(listState = listState)
         }
         composable(MusicScreen.Albums.name) {
-            AlbumScreen(listState = listState)
+            AlbumScreen()
         }
         composable(MusicScreen.Playlists.name) {
             PlaylistScreen()

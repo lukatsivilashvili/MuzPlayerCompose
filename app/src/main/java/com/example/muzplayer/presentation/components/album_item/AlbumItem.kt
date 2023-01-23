@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,9 +30,9 @@ import com.example.muzplayer.presentation.components.CustomCoilImage
 @Composable
 fun AlbumItem(
     album: Album,
-    compSize: Dp = 64.dp
+    compSize: Dp = 200.dp
 ) {
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
@@ -41,7 +40,7 @@ fun AlbumItem(
             .clickable {
 
             },
-        verticalAlignment = Alignment.CenterVertically
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
@@ -51,9 +50,9 @@ fun AlbumItem(
             contentAlignment = Alignment.Center
         )
         {
-            CustomCoilImage(uri = album.imageUrl)
+            CustomCoilImage(uri = album.createAlbumArtUri())
         }
-        Column(modifier = Modifier.weight(1f)) {
+        Column() {
             Text(
                 text = album.title,
                 maxLines = 1,
@@ -63,7 +62,7 @@ fun AlbumItem(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(start = 22.dp, end = 22.dp)
+                    .padding(start = 22.dp, end = 22.dp, top = 8.dp)
             )
             Text(
                 text = album.artist,

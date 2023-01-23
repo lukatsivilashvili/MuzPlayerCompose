@@ -106,28 +106,10 @@ object MediaStoreLoader {
                 /* cancellationSignal = */ null
             )
             query?.use { cursor ->
-                val titleColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)
-                val artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ARTIST)
-                val songCount =
-                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.NUMBER_OF_SONGS)
-                val albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
 
                 while (cursor.moveToNext()) {
-                    val title = cursor.getString(titleColumn)
-                    val artist = cursor.getString(artistColumn)
-                    val albumId = cursor.getLong(albumIdColumn).toString()
-                    val uri = Uri.parse("content://media/external/audio/albumart")
-                    val artUri = Uri.withAppendedPath(uri, albumId).toString()
-
                     albumSet.add(
-                        Album(
-                            title = title,
-                            artist = artist,
-                            albumId = albumId,
-                            imageUrl = artUri,
-                            songCount = songCount
-                        )
+                        Album.fromCursor(cursor = cursor)
                     )
                 }
             }

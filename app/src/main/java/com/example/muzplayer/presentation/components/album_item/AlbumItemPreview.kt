@@ -7,8 +7,6 @@ package com.example.muzplayer.presentation.components.album_item
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -31,15 +29,14 @@ import com.example.muzplayer.presentation.components.CustomCoilImage
 
 @Composable
 fun AlbumItemPreview(
-    music: Album,
+    album: Album,
     compSize: Dp = 64.dp
 ) {
-    Row(
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.secondary)
             .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
@@ -48,17 +45,17 @@ fun AlbumItemPreview(
                 .clip(RoundedCornerShape(5.dp)),
             contentAlignment = Alignment.Center
         )
-        { CustomCoilImage(uri = music.imageUrl) }
-        Column(modifier = Modifier.weight(1f)) {
+        { CustomCoilImage(uri = album.imageUrl) }
+        Column() {
             Text(
-                text = music.title,
+                text = album.title,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(start = 22.dp, end = 22.dp)
+                    .padding(start = 22.dp, end = 22.dp, top = 8.dp)
             )
             Text(
-                text = music.artist,
+                text = album.artist,
                 fontSize = 11.sp,
                 modifier = Modifier
                     .padding(start = 22.dp, end = 22.dp)
@@ -71,11 +68,12 @@ fun AlbumItemPreview(
 @Composable
 fun ItemPreviews() {
     AlbumItemPreview(
-        music = Album(
-            albumId = "1",
+        album = Album(
+            albumId = 1,
             title = "Only God Can Judge Me",
             artist = "last trial",
             imageUrl = ""
-        )
+        ),
+        compSize = 200.dp
     )
 }
