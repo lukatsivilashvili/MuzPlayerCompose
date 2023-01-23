@@ -24,13 +24,13 @@ import androidx.compose.ui.unit.sp
 import com.example.muzplayer.common.extensions.formatDuration
 import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.components.CustomCoilImage
-import com.example.muzplayer.presentation.ui.library_screen.MainViewModel
+import com.example.muzplayer.presentation.ui.library_screen.LibraryViewModel
 
 @Composable
 fun MusicItem(
     music: Song,
     compSize: Dp = 64.dp,
-    viewModel: MainViewModel
+    viewModel: LibraryViewModel
 ) {
     Row(
         modifier = Modifier

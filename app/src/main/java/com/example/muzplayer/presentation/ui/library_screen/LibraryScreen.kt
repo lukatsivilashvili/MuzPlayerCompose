@@ -17,24 +17,28 @@ import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.components.music_item.MusicItem
 
 @Composable
-fun LibraryBody(
-    viewModel: MainViewModel = hiltViewModel(),
+fun LibraryScreen(
+    viewModel: LibraryViewModel = hiltViewModel(),
     listState: LazyListState
 ) {
-    val songs = viewModel.mediaItems.collectAsState()
+    val songs = viewModel.songItems.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
     ) {
-        HomeContent(music = songs.value, viewModel = viewModel, listState = listState)
+        HomeContent(
+            data = songs.value,
+            viewModel = viewModel,
+            listState = listState,
+        )
     }
 }
 
 @Composable
 fun HomeContent(
-    music: List<Song>,
-    viewModel: MainViewModel,
+    data: List<Song>,
+    viewModel: LibraryViewModel,
     listState: LazyListState
 ) {
     LazyColumn(
@@ -43,9 +47,8 @@ fun HomeContent(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        items(music) { musicItem ->
+        items(data) { musicItem ->
             MusicItem(music = musicItem, viewModel = viewModel)
         }
-
     }
 }

@@ -1,5 +1,6 @@
 package com.example.muzplayer.presentation
 
+import AlbumScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedDispatcher
@@ -53,11 +54,10 @@ import com.example.muzplayer.common.MusicScreen
 import com.example.muzplayer.presentation.components.BottomNavigationBar
 import com.example.muzplayer.presentation.components.search_textfield.TextFieldWithoutPadding
 import com.example.muzplayer.presentation.ui.bottom_bar.HomeBottomBar
-import com.example.muzplayer.presentation.ui.home_screen.HomeBody
-import com.example.muzplayer.presentation.ui.library_screen.LibraryBody
-import com.example.muzplayer.presentation.ui.library_screen.MainViewModel
+import com.example.muzplayer.presentation.ui.library_screen.LibraryScreen
+import com.example.muzplayer.presentation.ui.library_screen.LibraryViewModel
 import com.example.muzplayer.presentation.ui.player_screen.PlayerScreen
-import com.example.muzplayer.presentation.ui.playlist_screen.PlaylistBody
+import com.example.muzplayer.presentation.ui.playlist_screen.PlaylistScreen
 import com.example.muzplayer.presentation.ui.theme.MuzPlayerTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MuzPlayerTheme {
-                setStatusColor()
+                SetStatusColor()
                 MainActivityScreen(backPressedDispatcher = onBackPressedDispatcher)
             }
         }
@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
 fun MainActivityScreen(
     backPressedDispatcher: OnBackPressedDispatcher
 ) {
-    val mainViewModel: MainViewModel = hiltViewModel()
+    val libraryViewModel: LibraryViewModel = hiltViewModel()
     val allScreens = MusicScreen.values().toList()
     val navController = rememberNavController()
     val backstackEntry = navController.currentBackStackEntryAsState()
@@ -92,7 +92,7 @@ fun MainActivityScreen(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
     val coroutineScope = rememberCoroutineScope()
-    val songs = mainViewModel.mediaItems.collectAsState().value
+    val songs = libraryViewModel.songItems.collectAsState().value
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -117,7 +117,7 @@ fun MainActivityScreen(
                     BottomNavigationBar(
                         allScreens = allScreens,
                         onItemSelected = { screen ->
-                            navController.navigate(screen.name)
+                            navController.navigate(route = screen.name)
                         },
                         currentScreen = currentScreen
                     )
@@ -134,8 +134,6 @@ fun MainActivityScreen(
                                     .padding(start = 16.dp, end = 16.dp)
                             ) {
                                 Text(
-                                    modifier = Modifier
-                                        .padding(end = 24.dp),
                                     text = currentScreen.name,
                                     color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
                                     fontWeight = FontWeight.Bold,
@@ -147,11 +145,11 @@ fun MainActivityScreen(
                                 if (currentScreen.name == "Library") {
                                     AnimatedVisibility(visible = expanded) {
                                         TextFieldWithoutPadding(
-                                            modifier = Modifier,
+                                            modifier = Modifier.padding(start = 24.dp),
                                             placeholder = "Search",
                                             value = text,
                                             onImeSearch = {
-                                                val newIndex = mainViewModel.searchSong(songs, text)
+                                                val newIndex = libraryViewModel.searchSong(songs, text)
                                                 coroutineScope.launch {
                                                     listState.scrollToItem(newIndex)
                                                 }
@@ -227,23 +225,23 @@ fun MusicNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = MusicScreen.Home.name,
+        startDestination = MusicScreen.Library.name,
         modifier = modifier
     ) {
-        composable(MusicScreen.Home.name) {
-            HomeBody()
-        }
         composable(MusicScreen.Library.name) {
-            LibraryBody(listState = listState)
+            LibraryScreen(listState = listState)
+        }
+        composable(MusicScreen.Albums.name) {
+            AlbumScreen()
         }
         composable(MusicScreen.Playlists.name) {
-            PlaylistBody()
+            PlaylistScreen()
         }
     }
 }
 
 @Composable
-private fun setStatusColor() {
+private fun SetStatusColor() {
     val systemUiController = rememberSystemUiController()
     val primaryColor = androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
     val darkTheme = isSystemInDarkTheme()

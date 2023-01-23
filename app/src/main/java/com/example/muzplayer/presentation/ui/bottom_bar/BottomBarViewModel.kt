@@ -5,14 +5,10 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL
 import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE
-import android.util.Log.d
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.muzplayer.common.Constants.MEDIA_ROOT_ID
-import com.example.muzplayer.common.extensions.isPlayEnabled
-import com.example.muzplayer.common.extensions.isPlaying
-import com.example.muzplayer.common.extensions.isPrepared
+import com.example.muzplayer.common.base.BaseViewModel
 import com.example.muzplayer.domain.exoplayer.MusicServiceConnection
 import com.example.muzplayer.domain.models.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,21 +22,21 @@ import kotlin.system.exitProcess
 @HiltViewModel
 class BottomBarViewModel @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection
-) : ViewModel() {
+) : BaseViewModel(musicServiceConnection = musicServiceConnection) {
 
 
     val currentPlayingSongScreen: MutableStateFlow<MediaMetadataCompat?> =
         musicServiceConnection.currentPlayingSong
+
     private val currentSongFlow: MutableStateFlow<MediaMetadataCompat?> =
         musicServiceConnection.currentPlayingSong
+
     private val songEndFLow: MutableStateFlow<Int> = musicServiceConnection.songEndCounter
 
     private val shouldStopTriple = MutableStateFlow(Triple<Int?, Boolean?, Song?>(0, false, null))
     private val shouldStopFlow: MutableStateFlow<Triple<Int?, Boolean?, Song?>> = shouldStopTriple
 
-    var currentPlayingSong: MediaMetadataCompat? = null
-    val playbackState = musicServiceConnection.playbackState
-    var testTriple: Triple<Int?, Boolean?, Song?>? = null
+    var shouldStopTripleValue: Triple<Int?, Boolean?, Song?>? = null
     var songEndNums: Int? = null
 
 
@@ -72,9 +68,9 @@ class BottomBarViewModel @Inject constructor(
             launch {
                 songEndFLow.collect {
                     songEndNums = it
-                    if (testTriple != null) {
-                        if (testTriple?.second == true && testTriple?.first != songEndNums) {
-                            testTriple?.third?.let { it1 ->
+                    if (shouldStopTripleValue != null) {
+                        if (shouldStopTripleValue?.second == true && shouldStopTripleValue?.first != songEndNums) {
+                            shouldStopTripleValue?.third?.let { it1 ->
                                 playOrToggleSong(
                                     mediaItem = it1,
                                     toggle = true
@@ -89,7 +85,7 @@ class BottomBarViewModel @Inject constructor(
 
             launch {
                 shouldStopFlow.collect {
-                    testTriple = it
+                    shouldStopTripleValue = it
                 }
             }
         }
@@ -101,19 +97,6 @@ class BottomBarViewModel @Inject constructor(
                 shouldWaitTillEndValue = it
             }
         }
-    }
-
-
-    fun skipToNextSong() {
-        musicServiceConnection.transportController.skipToNext()
-    }
-
-    fun skipToPreviousSong() {
-        musicServiceConnection.transportController.skipToPrevious()
-    }
-
-    fun seekTo(pos: Float) {
-        musicServiceConnection.transportController.seekTo(pos.toLong())
     }
 
     fun shufflePlaylist(shuffleState: Boolean) {
@@ -130,28 +113,6 @@ class BottomBarViewModel @Inject constructor(
         }
     }
 
-    fun playOrToggleSong(mediaItem: Song, toggle: Boolean = false) {
-        val isPrepared = playbackState.value?.isPrepared ?: false
-        if (isPrepared && mediaItem.mediaId ==
-            currentPlayingSong?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
-        ) {
-            playbackState.value?.let { playbackState ->
-                when {
-                    playbackState.isPlaying -> {
-                        if (toggle) musicServiceConnection.transportController.pause()
-                    }
-
-                    playbackState.isPlayEnabled -> {
-                        musicServiceConnection.transportController.play()
-                    }
-
-                    else -> Unit
-                }
-            }
-        } else {
-            musicServiceConnection.transportController.playFromMediaId(mediaItem.mediaId, null)
-        }
-    }
 
     private fun handleTimerFinishAction(song: Song, currNum: Int?) {
         if (shouldWaitTillEndValue != null && !shouldWaitTillEndValue!!) {
@@ -164,7 +125,6 @@ class BottomBarViewModel @Inject constructor(
 
     fun setTimer(sleepTime: Int, song: Song) {
         var currentEndNum = songEndNums
-        d("ntag", currentEndNum.toString())
 
         countDownTimer = object : CountDownTimer(sleepTime * 60000.toLong(), 1000) {
             override fun onTick(p0: Long) {
