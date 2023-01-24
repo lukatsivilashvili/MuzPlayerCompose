@@ -1,8 +1,7 @@
 package com.example.muzplayer.presentation.ui.player_screen
 
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +36,6 @@ import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -70,7 +68,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PlayerScreen(
-    backPressedDispatcher: OnBackPressedDispatcher,
     bottomSheetScaffoldState: BottomSheetScaffoldState,
     bottomBarViewModel: BottomBarViewModel = hiltViewModel(),
     playerScreenViewModel: PlayerScreenViewModel = hiltViewModel()
@@ -81,7 +78,6 @@ fun PlayerScreen(
     PlayerScreenBody(
         modifier = Modifier,
         song = songModel,
-        backPressedDispatcher = backPressedDispatcher,
         bottomBarViewModel = bottomBarViewModel,
         playerScreenViewModel = playerScreenViewModel,
         bottomSheetScaffoldState = bottomSheetScaffoldState
@@ -92,7 +88,6 @@ fun PlayerScreen(
 @Composable
 fun PlayerScreenBody(
     modifier: Modifier = Modifier,
-    backPressedDispatcher: OnBackPressedDispatcher,
     bottomBarViewModel: BottomBarViewModel,
     playerScreenViewModel: PlayerScreenViewModel,
     bottomSheetScaffoldState: BottomSheetScaffoldState,
@@ -108,14 +103,9 @@ fun PlayerScreenBody(
 
     val coroutineScope = rememberCoroutineScope()
 
-
-    val backCallback = remember {
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                coroutineScope.launch {
-                    bottomSheetScaffoldState.bottomSheetState.collapse()
-                }
-            }
+    BackHandler(enabled = true) {
+        coroutineScope.launch {
+            bottomSheetScaffoldState.bottomSheetState.collapse()
         }
     }
 
@@ -194,14 +184,6 @@ fun PlayerScreenBody(
         }
         LaunchedEffect("playbackPosition") {
             playerScreenViewModel.updateCurrentPlaybackPosition()
-        }
-
-        DisposableEffect(backPressedDispatcher) {
-            backPressedDispatcher.addCallback(backCallback)
-
-            onDispose {
-                backCallback.remove()
-            }
         }
     }
 
