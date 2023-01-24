@@ -32,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -55,7 +53,6 @@ import com.example.muzplayer.presentation.components.BottomNavigationBar
 import com.example.muzplayer.presentation.components.search_textfield.TextFieldWithoutPadding
 import com.example.muzplayer.presentation.ui.bottom_bar.HomeBottomBar
 import com.example.muzplayer.presentation.ui.library_screen.LibraryScreen
-import com.example.muzplayer.presentation.ui.library_screen.LibraryViewModel
 import com.example.muzplayer.presentation.ui.player_screen.PlayerScreen
 import com.example.muzplayer.presentation.ui.playlist_screen.PlaylistScreen
 import com.example.muzplayer.presentation.ui.theme.MuzPlayerTheme
@@ -82,7 +79,7 @@ class MainActivity : ComponentActivity() {
 fun MainActivityScreen(
     backPressedDispatcher: OnBackPressedDispatcher
 ) {
-    val libraryViewModel: LibraryViewModel = hiltViewModel()
+//    val libraryViewModel: LibraryViewModel = hiltViewModel()
     val allScreens = MusicScreen.values().toList()
     val navController = rememberNavController()
     val backstackEntry = navController.currentBackStackEntryAsState()
@@ -92,7 +89,7 @@ fun MainActivityScreen(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
     val coroutineScope = rememberCoroutineScope()
-    val songs = libraryViewModel.songItems.collectAsState().value
+//    val songs = libraryViewModel.songItems.collectAsState().value
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -149,10 +146,10 @@ fun MainActivityScreen(
                                             placeholder = "Search",
                                             value = text,
                                             onImeSearch = {
-                                                val newIndex = libraryViewModel.searchSong(songs, text)
-                                                coroutineScope.launch {
-                                                    listState.scrollToItem(newIndex)
-                                                }
+//                                                val newIndex = libraryViewModel.searchSong(songs, text)
+//                                                coroutineScope.launch {
+//                                                    listState.scrollToItem(newIndex)
+//                                                }
 
                                             },
                                             onValueChange = {
