@@ -4,8 +4,6 @@ import android.support.v4.media.MediaBrowserCompat
 import androidx.lifecycle.viewModelScope
 import com.example.muzplayer.common.Constants.MEDIA_ROOT_ID
 import com.example.muzplayer.common.base.BaseViewModel
-import com.example.muzplayer.data.SimpleDataStoreCache
-import com.example.muzplayer.domain.MediaType
 import com.example.muzplayer.domain.exoplayer.MusicServiceConnection
 import com.example.muzplayer.domain.exoplayer.MusicSource
 import com.example.muzplayer.domain.models.Song
@@ -33,16 +31,8 @@ class LibraryViewModel @Inject constructor(
     }
 
     private suspend fun fetchSongs() {
-
-        val cachedSongsList = SimpleDataStoreCache.songsMap[MediaType.SONG]
-        if (!cachedSongsList.isNullOrEmpty()){
-            songItems.value = cachedSongsList
-        }else{
-            val allSongs = musicSource.fetchSongData()
-            songItems.value = allSongs
-            SimpleDataStoreCache.songsMap[MediaType.SONG] = allSongs
-        }
-
+        val allSongs = musicSource.fetchSongData()
+        songItems.value = allSongs
     }
 
     fun searchSong(songsList: List<Song>, query: String): Int {
