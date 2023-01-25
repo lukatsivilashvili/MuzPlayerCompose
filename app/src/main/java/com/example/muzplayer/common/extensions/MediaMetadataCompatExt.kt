@@ -7,7 +7,7 @@ fun MediaMetadataCompat.toSong(): Song {
     return Song(
         mediaId = description.mediaId ?: "",
         title = description.title.toString(),
-        subtitle = description.subtitle.toString(),
+        artist = description.subtitle.toString(),
         duration = description.description.toString().toLong(),
         songUrl = description.mediaUri.toString(),
         imageUrl = description.iconUri.toString()

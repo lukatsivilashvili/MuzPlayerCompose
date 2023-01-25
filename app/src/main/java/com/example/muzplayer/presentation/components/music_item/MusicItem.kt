@@ -65,7 +65,7 @@ fun MusicItem(
                     .padding(start = 22.dp, end = 22.dp)
             )
             Text(
-                text = music.subtitle,
+                text = music.artist,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,

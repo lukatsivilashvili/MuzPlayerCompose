@@ -55,7 +55,7 @@ fun MusicItemPreview(
                     .padding(start = 22.dp, end = 22.dp)
             )
             Text(
-                text = music.subtitle,
+                text = music.artist,
                 fontSize = 11.sp,
                 modifier = Modifier
                     .padding(start = 22.dp, end = 22.dp)
@@ -77,7 +77,7 @@ fun ItemPreview() {
         music = Song(
             mediaId = "1",
             title = "Only God Can Judge Me",
-            subtitle = "last trial",
+            artist = "last trial",
             duration = 132123123,
             songUrl = "4:30"
         )

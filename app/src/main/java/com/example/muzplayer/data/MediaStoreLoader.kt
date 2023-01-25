@@ -1,9 +1,8 @@
 package com.example.muzplayer.data
 
-import android.content.ContentUris
 import android.content.Context
-import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log.d
 import com.example.muzplayer.domain.MediaType
 import com.example.muzplayer.domain.models.Album
 import com.example.muzplayer.domain.models.Song
@@ -17,10 +16,15 @@ object MediaStoreLoader {
 
     private var initialized = false
 
-    suspend fun <T> initializeListIfNeeded(context: Context, typeOfMedia: MediaType): List<T> {
+    suspend fun <T> initializeListIfNeeded(
+        context: Context,
+        typeOfMedia: MediaType,
+        albumId: Long? = null
+    ): List<T> {
         return when (typeOfMedia) {
             MediaType.SONG -> initializeSongList(context) as List<T>
             MediaType.ALBUM -> initializeAlbumList(context) as List<T>
+            MediaType.ALBUM_SONGS -> initializeSongListWithAlbumId(context, albumId) as List<T>
         }
     }
 
@@ -47,38 +51,51 @@ object MediaStoreLoader {
                 null
             )
             query?.use { cursor ->
-                val titleColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-                val artistColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
-                val durationColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-                val albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
-
                 while (cursor.moveToNext()) {
-                    val id = cursor.getLong(idColumn)
-                    val title = cursor.getString(titleColumn)
-                    val artist = cursor.getString(artistColumn)
-                    val duration = cursor.getLong(durationColumn)
-                    val albumId = cursor.getLong(albumIdColumn).toString()
-                    val contentUri: Uri = ContentUris.withAppendedId(
-                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        id
-                    )
-                    val uri = Uri.parse("content://media/external/audio/albumart")
-                    val artUri = Uri.withAppendedPath(uri, albumId).toString()
-
                     musicItems.add(
-                        Song(
-                            mediaId = id.toString(),
-                            title = title,
-                            subtitle = artist,
-                            duration = duration,
-                            songUrl = contentUri.toString(),
-                            imageUrl = artUri
-                        )
+                        Song.fromCursor(cursor)
                     )
+                }
+            }
+            initialized = true
+        }
+        return musicItems
+    }
+
+    private suspend fun initializeSongListWithAlbumId(
+        context: Context,
+        albumId: Long?
+    ): List<Song> {
+        musicItems.clear()
+        withContext(Dispatchers.IO) {
+            val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+            val selection = MediaStore.Audio.Media.IS_MUSIC + " !=0"
+            val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
+            val projection = arrayOf(
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.ALBUM_ID
+            )
+            val query = context.contentResolver.query(
+                collection,
+                projection,
+                selection,
+                null,
+                sortOrder,
+                null
+            )
+            query?.use { cursor ->
+                val albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+                while (cursor.moveToNext()) {
+                    val currAlbumId = cursor.getLong(albumIdColumn)
+                    if (currAlbumId == albumId){
+                        musicItems.add(
+                            Song.fromCursor(cursor = cursor)
+                        )
+                    }
                 }
             }
             initialized = true
@@ -106,7 +123,6 @@ object MediaStoreLoader {
                 /* cancellationSignal = */ null
             )
             query?.use { cursor ->
-
                 while (cursor.moveToNext()) {
                     albumSet.add(
                         Album.fromCursor(cursor = cursor)

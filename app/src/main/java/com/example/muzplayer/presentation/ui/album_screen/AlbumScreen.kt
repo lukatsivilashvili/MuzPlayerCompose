@@ -87,6 +87,7 @@ fun AlbumScreen(
 @Composable
 fun AlbumScreenContent(
     data: List<Album>,
+    viewModel: AlbumScreenViewModel = hiltViewModel()
 ) {
     LazyVerticalGrid(
         modifier = Modifier
@@ -95,7 +96,7 @@ fun AlbumScreenContent(
         columns = GridCells.Adaptive(minSize = 200.dp)
     ) {
         items(data) { musicItem ->
-            AlbumItem(album = musicItem)
+            AlbumItem(album = musicItem, viewModel = viewModel)
         }
     }
 }

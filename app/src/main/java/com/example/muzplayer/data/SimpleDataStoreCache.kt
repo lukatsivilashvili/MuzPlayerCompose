@@ -9,6 +9,7 @@ import com.example.muzplayer.domain.models.Song
  */
 object SimpleDataStoreCache {
     val songsMap = mutableMapOf<MediaType, List<Song>>()
+    val albumSongsMap = mutableMapOf<Long?, List<Song>>()
 
     val albumMap = mutableMapOf<MediaType, List<Album>>()
 }
