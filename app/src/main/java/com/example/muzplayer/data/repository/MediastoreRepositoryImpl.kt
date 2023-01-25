@@ -16,22 +16,42 @@ class MediaStoreRepositoryImpl @Inject constructor(
     override suspend fun getAllSongs(): List<Song> {
 
         val cachedSongsList = SimpleDataStoreCache.songsMap[MediaType.SONG]
-        return if (!cachedSongsList.isNullOrEmpty()){
+        return if (!cachedSongsList.isNullOrEmpty()) {
             cachedSongsList
-        }else{
-            val songsList: List<Song> = mediaStoreLoader.initializeListIfNeeded(context, MediaType.SONG)
+        } else {
+            val songsList: List<Song> = mediaStoreLoader.initializeListIfNeeded(
+                context = context,
+                typeOfMedia = MediaType.SONG
+            )
             SimpleDataStoreCache.songsMap[MediaType.SONG] = songsList
             songsList
+        }
+    }
+
+    override suspend fun getAllSongsFromAlbum(albumId: Long?): List<Song> {
+        val cachedAlbumSongsList = SimpleDataStoreCache.albumSongsMap[albumId]
+        return if (!cachedAlbumSongsList.isNullOrEmpty()) {
+            cachedAlbumSongsList
+        } else {
+            val albumSongsList: List<Song> = mediaStoreLoader.initializeListIfNeeded(
+                context = context,
+                typeOfMedia = MediaType.ALBUM_SONGS, albumId = albumId
+            )
+            SimpleDataStoreCache.albumSongsMap[albumId] = albumSongsList
+            albumSongsList
         }
     }
 
     override suspend fun getAllAlbums(): List<Album> {
 
         val cachedAlbumsList = SimpleDataStoreCache.albumMap[MediaType.ALBUM]
-        return if (!cachedAlbumsList.isNullOrEmpty()){
+        return if (!cachedAlbumsList.isNullOrEmpty()) {
             cachedAlbumsList
-        }else{
-            val albumsList: List<Album> = mediaStoreLoader.initializeListIfNeeded(context, MediaType.ALBUM)
+        } else {
+            val albumsList: List<Album> = mediaStoreLoader.initializeListIfNeeded(
+                context = context,
+                typeOfMedia = MediaType.ALBUM
+            )
             SimpleDataStoreCache.albumMap[MediaType.ALBUM] = albumsList
             albumsList
         }

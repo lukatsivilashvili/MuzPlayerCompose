@@ -149,7 +149,7 @@ fun HomeBottomBarItem(
                 )
 
                 Text(
-                    song.subtitle,
+                    song.artist,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                     maxLines = 1,

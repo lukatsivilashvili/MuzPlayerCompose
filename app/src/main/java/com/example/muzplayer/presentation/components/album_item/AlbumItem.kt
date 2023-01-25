@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.muzplayer.domain.models.Album
 import com.example.muzplayer.presentation.components.CustomCoilImage
+import com.example.muzplayer.presentation.ui.album_screen.AlbumScreenViewModel
 
 /**
  * Created by lukatsivilashvili on 25.12.22 12:43 AM.
@@ -30,6 +31,7 @@ import com.example.muzplayer.presentation.components.CustomCoilImage
 @Composable
 fun AlbumItem(
     album: Album,
+    viewModel: AlbumScreenViewModel,
     compSize: Dp = 200.dp
 ) {
     Column(
@@ -38,7 +40,7 @@ fun AlbumItem(
             .background(MaterialTheme.colorScheme.surface)
             .padding(8.dp)
             .clickable {
-
+                viewModel.loadTest(album.albumId)
             },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

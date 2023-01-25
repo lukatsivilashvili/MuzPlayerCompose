@@ -17,6 +17,7 @@ import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_URI
 import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_TITLE
 import android.util.Log.d
 import com.example.muzplayer.data.repository.MediaStoreRepositoryImpl
+import com.example.muzplayer.domain.MediaType
 import com.example.muzplayer.domain.exoplayer.State.STATE_CREATED
 import com.example.muzplayer.domain.exoplayer.State.STATE_ERROR
 import com.example.muzplayer.domain.exoplayer.State.STATE_INITIALIZED
@@ -37,30 +38,47 @@ class MusicSource @Inject constructor(
 
     var songs = emptyList<MediaMetadataCompat>()
 
-    suspend fun fetchMediaData() = withContext(Dispatchers.Main) {
-        state = STATE_INITIALIZING
-        val allSongs = repository.getAllSongs()
-        songs = allSongs.map { song ->
-            Builder()
-                .putString(METADATA_KEY_TITLE, song.title)
-                .putString(METADATA_KEY_DISPLAY_TITLE, song.title)
-                .putString(METADATA_KEY_ARTIST, song.subtitle)
-                .putString(METADATA_KEY_DISPLAY_SUBTITLE, song.subtitle)
-                .putString(METADATA_KEY_MEDIA_ID, song.mediaId)
-                .putString(METADATA_KEY_MEDIA_URI, song.songUrl)
-                .putLong(METADATA_KEY_DURATION, song.duration)
-                .putString(METADATA_KEY_DISPLAY_ICON_URI, if (song.hasArt) song.imageUrl else null)
-                .putString(METADATA_KEY_ALBUM_ART_URI, if (song.hasArt) song.imageUrl else null)
-                .putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.duration.toString())
-                .build()
+    suspend fun fetchMediaData(mediaType: MediaType = MediaType.SONG, albumId: Long? = null) =
+        withContext(Dispatchers.Main) {
+            state = STATE_INITIALIZING
+            when (mediaType) {
+                MediaType.SONG -> {
+                    val allSongs = repository.getAllSongs()
+                    songs = allSongs.map { song ->
+                        Builder()
+                            .putString(METADATA_KEY_TITLE, song.title)
+                            .putString(METADATA_KEY_DISPLAY_TITLE, song.title)
+                            .putString(METADATA_KEY_ARTIST, song.artist)
+                            .putString(METADATA_KEY_DISPLAY_SUBTITLE, song.artist)
+                            .putString(METADATA_KEY_MEDIA_ID, song.mediaId)
+                            .putString(METADATA_KEY_MEDIA_URI, song.songUrl)
+                            .putLong(METADATA_KEY_DURATION, song.duration)
+                            .putString(
+                                METADATA_KEY_DISPLAY_ICON_URI,
+                                if (song.hasArt) song.imageUrl else null
+                            )
+                            .putString(
+                                METADATA_KEY_ALBUM_ART_URI,
+                                if (song.hasArt) song.imageUrl else null
+                            )
+                            .putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.duration.toString())
+                            .build()
+                    }
+                }
+
+                MediaType.ALBUM_SONGS -> {
+                    repository.getAllSongsFromAlbum(albumId = albumId)
+                }
+
+                MediaType.ALBUM -> TODO()
+            }
+            state = STATE_INITIALIZED
         }
-        state = STATE_INITIALIZED
-    }
 
     suspend fun fetchSongData(): List<Song> {
-            state = STATE_INITIALIZING
-            val allSongs = repository.getAllSongs()
-            state = STATE_INITIALIZED
+        state = STATE_INITIALIZING
+        val allSongs = repository.getAllSongs()
+        state = STATE_INITIALIZED
         return allSongs
     }
 
@@ -69,6 +87,13 @@ class MusicSource @Inject constructor(
         val allAlbums = repository.getAllAlbums()
         state = STATE_INITIALIZED
         return allAlbums
+    }
+
+    suspend fun fetchSongsFromAlbum(albumId: Long): List<Song> {
+        state = STATE_INITIALIZING
+        val albumSongs = repository.getAllSongsFromAlbum(albumId = albumId)
+        state = STATE_INITIALIZED
+        return albumSongs
     }
 
     fun asMediaSource(dataSourceFactory: DefaultDataSource.Factory): ConcatenatingMediaSource {

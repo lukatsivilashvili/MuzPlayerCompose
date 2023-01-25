@@ -252,7 +252,7 @@ fun PlayerScreenNames(
                 modifier = modifier.padding(top = 8.dp)
             )
         }
-        songModel?.subtitle?.let {
+        songModel?.artist?.let {
             Text(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

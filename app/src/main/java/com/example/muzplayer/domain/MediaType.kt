@@ -5,5 +5,6 @@ package com.example.muzplayer.domain
  */
 enum class MediaType{
     SONG,
-    ALBUM
+    ALBUM,
+    ALBUM_SONGS
 }
