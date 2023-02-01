@@ -23,10 +23,10 @@ fun CustomCoilImage(
         contentScale = contentScale,
         model = ImageRequest.Builder(LocalContext.current)
             .data(uri)
-            .fallback(R.drawable.ic_default_artwork32)
+            .fallback(R.drawable.ic_default_artwork64)
             .crossfade(true)
             .build(),
-        error = painterResource(R.drawable.ic_default_artwork32),
+        error = painterResource(R.drawable.ic_default_artwork64),
         contentDescription = "Music Art",
     )
 }

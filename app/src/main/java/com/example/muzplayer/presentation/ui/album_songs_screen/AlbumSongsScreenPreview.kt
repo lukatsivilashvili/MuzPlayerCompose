@@ -1,5 +1,9 @@
 package com.example.muzplayer.presentation.ui.album_songs_screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -112,5 +116,9 @@ fun AlbumScreen(
     modifier: Modifier = Modifier,
     albumSongs: List<Song>,
 ) {
+    Column(modifier = modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.surface)) {
 
+    }
 }

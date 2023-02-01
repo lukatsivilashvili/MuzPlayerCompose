@@ -59,6 +59,7 @@ import com.example.muzplayer.presentation.components.CrossFadeIcon
 import com.example.muzplayer.presentation.components.CustomCoilImage
 import com.example.muzplayer.presentation.components.sleep_timer.SleepTimerDialog
 import com.example.muzplayer.presentation.ui.bottom_bar.BottomBarViewModel
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
 /**
@@ -113,14 +114,14 @@ fun PlayerScreenBody(
         modifier = modifier
             .fillMaxSize()
             .background(
-                androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
+                androidx.compose.material3.MaterialTheme.colorScheme.surface
             )
-            .padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
+            .padding(start = AppTheme.dimens.dimen16dp, end = 16.dp),
 
         ) {
         PlayerScreenCloseIcon(
             modifier = modifier
-                .padding(start = 8.dp, bottom = 16.dp, top = 16.dp),
+                .padding(start = AppTheme.dimens.dimen8dp, top = AppTheme.dimens.dimen16dp),
             onClose = {
                 coroutineScope.launch {
                     bottomSheetScaffoldState.bottomSheetState.collapse()
@@ -129,63 +130,71 @@ fun PlayerScreenBody(
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly,
             modifier = modifier
                 .fillMaxSize()
-                .background(
-                    androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
-                )
         ) {
             val playbackStateCompat = bottomBarViewModel.playbackState.value
             val openDialog = remember { mutableStateOf(false) }
 
-            PlayerScreenImage(songModel = song)
-            PlayerScreenNames(songModel = song, modifier = modifier.padding(top = 16.dp))
-            song?.duration?.let {
-                PlayerSlider(
-                    currentTime = playerScreenViewModel.currentPlaybackFormattedPosition,
-                    totalTime = it.formatDuration(),
-                    playbackProgress = sliderProgress,
-                    onSliderChange = { newPosition ->
-                        localSliderValue = newPosition
-                        sliderIsChanging = true
-                    },
-                    onSliderChangeFinished = {
-                        bottomBarViewModel.seekTo(song.duration * localSliderValue)
-                        sliderIsChanging = false
-                    }
-                )
-            }
-            PlayerControls(
-                playNextSong = { bottomBarViewModel.skipToNextSong() },
-                playPreviousSong = { bottomBarViewModel.skipToPreviousSong() },
-                playOrToggleSong = {
-                    if (song != null) {
-                        bottomBarViewModel.playOrToggleSong(mediaItem = song, toggle = true)
-                    }
-                },
-                shuffleSongs = {
-                    bottomBarViewModel.shufflePlaylist(bottomBarViewModel.shuffleStates.value)
-                },
-                playbackStateCompat = playbackStateCompat,
-                viewModel = bottomBarViewModel,
-                openDialog = { openDialog.value = true }
-            )
+            PlayerScreenImage(songModel = song, modifier = modifier.padding(
+                start = AppTheme.dimens.dimen8dp,
+                end = AppTheme.dimens.dimen8dp
+            ))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceEvenly,
+                modifier = modifier
+            ) {
 
-            if (openDialog.value) {
-
-                if (song != null) {
-                    SleepTimerDialog(
-                        isOpen = openDialog,
-                        bottomBarViewModel = bottomBarViewModel,
-                        song = song
+                PlayerScreenNames(songModel = song)
+                song?.duration?.let {
+                    PlayerSlider(
+                        currentTime = playerScreenViewModel.currentPlaybackFormattedPosition,
+                        totalTime = it.formatDuration(),
+                        playbackProgress = sliderProgress,
+                        onSliderChange = { newPosition ->
+                            localSliderValue = newPosition
+                            sliderIsChanging = true
+                        },
+                        onSliderChangeFinished = {
+                            bottomBarViewModel.seekTo(song.duration * localSliderValue)
+                            sliderIsChanging = false
+                        }
                     )
                 }
+                PlayerControls(
+                    playNextSong = { bottomBarViewModel.skipToNextSong() },
+                    playPreviousSong = { bottomBarViewModel.skipToPreviousSong() },
+                    playOrToggleSong = {
+                        if (song != null) {
+                            bottomBarViewModel.playOrToggleSong(mediaItem = song, toggle = true)
+                        }
+                    },
+                    shuffleSongs = {
+                        bottomBarViewModel.shufflePlaylist(bottomBarViewModel.shuffleStates.value)
+                    },
+                    playbackStateCompat = playbackStateCompat,
+                    viewModel = bottomBarViewModel,
+                    openDialog = { openDialog.value = true }
+                )
+
+                if (openDialog.value) {
+
+                    if (song != null) {
+                        SleepTimerDialog(
+                            isOpen = openDialog,
+                            bottomBarViewModel = bottomBarViewModel,
+                            song = song
+                        )
+                    }
+                }
+            }
+            LaunchedEffect("playbackPosition") {
+                playerScreenViewModel.updateCurrentPlaybackPosition()
             }
         }
-        LaunchedEffect("playbackPosition") {
-            playerScreenViewModel.updateCurrentPlaybackPosition()
-        }
-    }
+            }
 
 }
 
@@ -214,7 +223,7 @@ fun PlayerScreenImage(
 ) {
     val configuration = LocalConfiguration.current
 
-    val screenHeight = configuration.screenWidthDp.dp.times(0.75f)
+    val screenHeight = if(configuration.screenHeightDp <= 740) configuration.screenWidthDp.dp.times(0.75f) else configuration.screenWidthDp.dp.times(1f)
     Box(
         modifier = Modifier
             .width(screenHeight)
@@ -226,7 +235,7 @@ fun PlayerScreenImage(
         CustomCoilImage(
             uri = songModel?.imageUrl,
             modifier = modifier
-                .fillMaxWidth()
+                .fillMaxSize()
         )
     }
 }
@@ -238,7 +247,7 @@ fun PlayerScreenNames(
 ) {
     Column(
         modifier = modifier
-            .padding(all = 8.dp)
+            .padding(start = AppTheme.dimens.dimen8dp, top = AppTheme.dimens.dimen16dp)
             .fillMaxWidth()
     ) {
         songModel?.title?.let {
@@ -248,8 +257,7 @@ fun PlayerScreenNames(
                 overflow = TextOverflow.Ellipsis,
                 style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = modifier.padding(top = 8.dp)
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer
             )
         }
         songModel?.artist?.let {
@@ -258,6 +266,7 @@ fun PlayerScreenNames(
                 overflow = TextOverflow.Ellipsis,
                 text = it,
                 color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = modifier.padding(bottom = AppTheme.dimens.dimen8dp)
             )
         }
     }
@@ -280,8 +289,7 @@ fun PlayerControls(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
-            .padding(vertical = 8.dp)
+            .padding(top = AppTheme.dimens.dimen32dp)
     ) {
         CrossFadeIcon(
             targetState = viewModel.shuffleStates.value,
@@ -291,7 +299,7 @@ fun PlayerControls(
             contentDescription = "Shuffle Playlist",
             iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             onClickAction = { shuffleSongs.invoke() },
-            paddingSize = 16.dp,
+            paddingSize = AppTheme.dimens.dimen16dp,
             size = 30.dp
         )
 
@@ -343,7 +351,7 @@ fun PlayerControls(
             contentDescription = "Sleep-Timer",
             iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSecondaryContainer,
             onClickAction = { openDialog.invoke() },
-            paddingSize = 16.dp,
+            paddingSize = AppTheme.dimens.dimen16dp,
             size = 30.dp
         )
     }
@@ -361,7 +369,6 @@ fun PlayerSlider(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
     ) {
         androidx.compose.material3.Slider(
             value = playbackProgress,
@@ -380,7 +387,7 @@ fun PlayerSlider(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp),
+                .padding(start = AppTheme.dimens.dimen8dp, end = AppTheme.dimens.dimen8dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

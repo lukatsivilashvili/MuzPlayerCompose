@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.muzplayer.presentation.components.CustomCoilImage
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 
 /**
  * Created by ltsivilashvili on 14.09.22
@@ -49,6 +50,8 @@ fun PlayerScreenBodyPreview(
 ) {
     Column(
         modifier = modifier
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
+            .padding(start = AppTheme.dimens.dimen16dp, end = AppTheme.dimens.dimen16dp, bottom = AppTheme.dimens.dimen32dp)
             .fillMaxSize()
 
     ) {
@@ -92,7 +95,6 @@ fun PlayerScreenImagePreview(
     {     CustomCoilImage(
         uri = null,
         modifier = modifier
-            .background(androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer)
             .fillMaxWidth()
             .background(androidx.compose.material3.MaterialTheme.colorScheme.tertiaryContainer)
     ) }
@@ -130,7 +132,7 @@ fun PlayerControlsPreview(
         modifier = modifier
             .fillMaxWidth()
             .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
-            .padding(vertical = 8.dp)
+            .padding(top = 32.dp)
     ) {
 
         Icon(
