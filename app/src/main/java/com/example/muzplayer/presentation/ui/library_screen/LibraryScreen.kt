@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.muzplayer.common.MusicScreen
 import com.example.muzplayer.domain.models.Song
+import com.example.muzplayer.presentation.components.SinglePermission
 import com.example.muzplayer.presentation.components.music_item.MusicItem
 import com.example.muzplayer.presentation.components.search_textfield.TextFieldWithoutPadding
 import kotlinx.coroutines.launch
@@ -131,6 +132,7 @@ fun LibraryScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary),
         ) {
+            SinglePermission()
             HomeContent(
                 data = songs,
                 viewModel = viewModel,
@@ -143,17 +145,19 @@ fun LibraryScreen(
 @Composable
 fun HomeContent(
     data: List<Song>,
-    viewModel: LibraryViewModel,
-    listState: LazyListState
+    viewModel: LibraryViewModel? = null,
+    listState: LazyListState? = null,
 ) {
-    LazyColumn(
-        state = listState,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        items(data) { musicItem ->
-            MusicItem(music = musicItem, viewModel = viewModel)
+    if (listState != null) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            items(data) { musicItem ->
+                MusicItem(music = musicItem, viewModel = viewModel)
+            }
         }
     }
 }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.muzplayer.domain.models.Album
 import com.example.muzplayer.presentation.components.CustomCoilImage
 import com.example.muzplayer.presentation.ui.album_screen.AlbumScreenViewModel
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 
 /**
  * Created by lukatsivilashvili on 25.12.22 12:43 AM.
@@ -32,15 +32,18 @@ import com.example.muzplayer.presentation.ui.album_screen.AlbumScreenViewModel
 fun AlbumItem(
     album: Album,
     viewModel: AlbumScreenViewModel,
-    compSize: Dp = 200.dp
+    compSize: Dp = AppTheme.dimens.dimen200dp
 ) {
+    val dimen22dp =AppTheme.dimens.dimen22dp
+    val dimen8dp =AppTheme.dimens.dimen8dp
+
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(compSize)
             .background(MaterialTheme.colorScheme.surface)
-            .padding(8.dp)
+            .padding(AppTheme.dimens.dimen8dp)
             .clickable {
-                viewModel.loadTest(album.albumId)
+
             },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -52,7 +55,7 @@ fun AlbumItem(
             contentAlignment = Alignment.Center
         )
         {
-            CustomCoilImage(uri = album.createAlbumArtUri())
+            CustomCoilImage(uri = album.imageUrl)
         }
         Column() {
             Text(
@@ -64,7 +67,7 @@ fun AlbumItem(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(start = 22.dp, end = 22.dp, top = 8.dp)
+                    .padding(start = dimen22dp, end = dimen22dp, top = dimen8dp)
             )
             Text(
                 text = album.artist,
@@ -74,7 +77,8 @@ fun AlbumItem(
                 fontSize = 11.sp,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(start = 22.dp, end = 22.dp)
+                    .padding(start = dimen22dp, end = dimen22dp)
+                    .align(Alignment.CenterHorizontally)
             )
         }
     }

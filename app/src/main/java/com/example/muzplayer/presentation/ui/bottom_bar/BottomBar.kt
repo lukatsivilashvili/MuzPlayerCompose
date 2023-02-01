@@ -43,6 +43,7 @@ import com.example.muzplayer.common.extensions.isPlaying
 import com.example.muzplayer.common.extensions.toSong
 import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.components.CustomCoilImage
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 
 @Composable
 fun HomeBottomBar(
@@ -103,16 +104,20 @@ fun HomeBottomBar(
 @Composable
 fun HomeBottomBarItem(
     song: Song,
-    compSize: Dp = 64.dp,
+    compSize: Dp = AppTheme.dimens.dimen64dp,
     playbackStateCompat: PlaybackStateCompat?,
     viewModel: BottomBarViewModel,
     onClickEvent: () -> Unit
 ) {
+    val dimen16dp = AppTheme.dimens.dimen16dp
+    val dimen8dp = AppTheme.dimens.dimen8dp
+    val dimen24dp = AppTheme.dimens.dimen24dp
+    val dimen48dp = AppTheme.dimens.dimen48dp
 
 
     Box(
         modifier = Modifier
-            .height(64.dp)
+            .height(compSize)
             .clickable(onClick = {
                 onClickEvent.invoke()
             })
@@ -138,7 +143,7 @@ fun HomeBottomBarItem(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .padding(vertical = 8.dp, horizontal = 16.dp),
+                    .padding(vertical = dimen8dp, horizontal = dimen16dp),
             ) {
                 Text(
                     song.title,
@@ -171,15 +176,15 @@ fun HomeBottomBarItem(
                 contentDescription = "Music Art",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .padding(end = 16.dp)
-                    .size(48.dp)
+                    .padding(end = dimen16dp)
+                    .size(dimen48dp)
                     .clickable(
                         interactionSource = remember {
                             MutableInteractionSource()
                         },
                         indication = rememberRipple(
                             bounded = false,
-                            radius = 24.dp
+                            radius = dimen24dp
                         )
                     ) { viewModel.playOrToggleSong(song, true) }
             )

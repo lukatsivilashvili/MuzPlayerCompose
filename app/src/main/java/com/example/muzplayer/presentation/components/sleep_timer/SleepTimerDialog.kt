@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.ui.bottom_bar.BottomBarViewModel
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 
 @Composable
 fun SleepTimerDialog(
@@ -43,6 +44,8 @@ fun SleepTimerDialog(
 
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
     val (checkedState, onStateChange) = remember { mutableStateOf(false) }
+    val dimen16dp = AppTheme.dimens.dimen16dp
+
 
     if (isOpen.value) {
         AlertDialog(
@@ -70,7 +73,7 @@ fun SleepTimerDialog(
                                     },
                                     role = Role.RadioButton
                                 )
-                                .padding(horizontal = 16.dp),
+                                .padding(horizontal = dimen16dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
@@ -80,7 +83,7 @@ fun SleepTimerDialog(
                             Text(
                                 text = text,
                                 style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(start = 16.dp)
+                                modifier = Modifier.padding(start = dimen16dp)
                             )
                         }
                     }
@@ -92,7 +95,7 @@ fun SleepTimerDialog(
                                 onValueChange = { onStateChange(!checkedState) },
                                 role = Role.Checkbox
                             )
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = dimen16dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Checkbox(
@@ -102,7 +105,7 @@ fun SleepTimerDialog(
                         Text(
                             text = "Play last song to end",
                             style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(start = 16.dp)
+                            modifier = Modifier.padding(start = dimen16dp)
                         )
                     }
                 }

@@ -1,6 +1,5 @@
 package com.example.muzplayer.presentation.ui.playlist_screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,12 +20,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.muzplayer.common.MusicScreen
 import com.example.muzplayer.presentation.components.SinglePermission
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistScreen() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentScreen = MusicScreen.Playlists
+    val dimen16dp = AppTheme.dimens.dimen16dp
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -35,7 +36,7 @@ fun PlaylistScreen() {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp)
+                            .padding(start = dimen16dp, end = dimen16dp)
                     ) {
                         Text(
                             text = currentScreen.name,
@@ -69,7 +70,6 @@ fun PlaylistScreen() {
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary),
         ) {
-            Log.d("currentThread", Thread.currentThread().name)
             SinglePermission()
         }
     }

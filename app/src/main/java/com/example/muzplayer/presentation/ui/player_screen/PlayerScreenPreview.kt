@@ -50,8 +50,7 @@ fun PlayerScreenBodyPreview(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface)
-            .padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
+
     ) {
         PlayerScreenCloseIconPreview()
         PlayerScreenImagePreview()

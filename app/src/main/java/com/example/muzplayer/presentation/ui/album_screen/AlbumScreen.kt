@@ -26,15 +26,18 @@ import com.example.muzplayer.common.MusicScreen
 import com.example.muzplayer.domain.models.Album
 import com.example.muzplayer.presentation.components.album_item.AlbumItem
 import com.example.muzplayer.presentation.ui.album_screen.AlbumScreenViewModel
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlbumScreen(
     viewModel: AlbumScreenViewModel = hiltViewModel(),
 ) {
-    val songs = viewModel.albumItems.collectAsState()
+    val albums = viewModel.albumItems.collectAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentScreen = MusicScreen.Albums
+    val dimen16dp = AppTheme.dimens.dimen16dp
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -43,7 +46,7 @@ fun AlbumScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp)
+                            .padding(start = dimen16dp, end = dimen16dp)
                     ) {
                         Text(
                             text = currentScreen.name,
@@ -78,7 +81,7 @@ fun AlbumScreen(
                 .background(MaterialTheme.colorScheme.primary),
         ) {
             AlbumScreenContent(
-                data = songs.value,
+                data = albums.value,
             )
         }
     }
@@ -93,10 +96,10 @@ fun AlbumScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
-        columns = GridCells.Adaptive(minSize = 200.dp)
+        columns = GridCells.Adaptive(minSize = AppTheme.dimens.dimen150dp)
     ) {
-        items(data) { musicItem ->
-            AlbumItem(album = musicItem, viewModel = viewModel)
+        items(data) { albumItem ->
+            AlbumItem(album = albumItem, viewModel = viewModel)
         }
     }
 }

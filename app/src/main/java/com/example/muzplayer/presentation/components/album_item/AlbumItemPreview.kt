@@ -25,12 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.muzplayer.domain.models.Album
 import com.example.muzplayer.presentation.components.CustomCoilImage
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 
 
 @Composable
 fun AlbumItemPreview(
     album: Album,
-    compSize: Dp = 64.dp
+    compSize: Dp = AppTheme.dimens.dimen64dp
 ) {
     Column(
         modifier = Modifier
@@ -52,13 +53,14 @@ fun AlbumItemPreview(
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(start = 22.dp, end = 22.dp, top = 8.dp)
+                    .padding(start = AppTheme.dimens.dimen22dp, end = AppTheme.dimens.dimen22dp, top = AppTheme.dimens.dimen8dp)
             )
             Text(
                 text = album.artist,
                 fontSize = 11.sp,
                 modifier = Modifier
-                    .padding(start = 22.dp, end = 22.dp)
+                    .padding(start =  AppTheme.dimens.dimen22dp, end =  AppTheme.dimens.dimen22dp)
+                    .align(Alignment.CenterHorizontally)
             )
         }
     }
@@ -74,6 +76,6 @@ fun ItemPreviews() {
             artist = "last trial",
             imageUrl = ""
         ),
-        compSize = 200.dp
+        compSize =  AppTheme.dimens.dimen200dp
     )
 }

@@ -36,6 +36,7 @@ import com.example.muzplayer.presentation.ui.bottom_bar.HomeBottomBar
 import com.example.muzplayer.presentation.ui.library_screen.LibraryScreen
 import com.example.muzplayer.presentation.ui.player_screen.PlayerScreen
 import com.example.muzplayer.presentation.ui.playlist_screen.PlaylistScreen
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 import com.example.muzplayer.presentation.ui.theme.MuzPlayerTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -108,7 +109,7 @@ fun MainActivityScreen(
                 ) {
                     MusicNavHost(
                         navController,
-                        modifier = Modifier.padding(bottom = 64.dp)
+                        modifier = Modifier.padding(bottom = AppTheme.dimens.dimen64dp)
                     )
                     HomeBottomBar(
                         modifier = Modifier.align(Alignment.BottomCenter),

@@ -17,8 +17,6 @@ data class Album(
     val imageUrl: String = "",
     val songCount: Int = 0
 ){
-
-
     fun createAlbumArtUri(): String {
         val uri = Uri.parse("content://media/external/audio/albumart")
         return Uri.withAppendedPath(uri, albumId.toString()).toString()
@@ -39,6 +37,11 @@ data class Album(
                 songCount = cursor.getColumnValue(MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS) {
                     cursor.getInt(it)
                 },
+                imageUrl = Uri.withAppendedPath(/* baseUri = */ Uri.parse("content://media/external/audio/albumart"),
+                    cursor.getColumnValue(MediaStore.Audio.AlbumColumns.ALBUM_ID) {
+                        cursor.getLong(it)
+                    }.toString()
+                ).toString()
             )
         }
     }

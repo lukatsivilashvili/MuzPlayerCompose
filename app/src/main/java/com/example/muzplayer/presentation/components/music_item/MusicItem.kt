@@ -21,24 +21,27 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.muzplayer.common.base.BaseViewModel
 import com.example.muzplayer.common.extensions.formatDuration
 import com.example.muzplayer.domain.models.Song
 import com.example.muzplayer.presentation.components.CustomCoilImage
-import com.example.muzplayer.presentation.ui.library_screen.LibraryViewModel
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 
 @Composable
 fun MusicItem(
     music: Song,
-    compSize: Dp = 64.dp,
-    viewModel: LibraryViewModel
+    compSize: Dp = AppTheme.dimens.dimen64dp,
+    viewModel: BaseViewModel?
 ) {
+    val dimen8dp = AppTheme.dimens.dimen8dp
+    val dimen22dp = AppTheme.dimens.dimen22dp
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(8.dp)
+            .padding(dimen8dp)
             .clickable {
-                viewModel.playOrToggleSong(music)
+                viewModel?.playOrToggleSong(music)
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -62,7 +65,7 @@ fun MusicItem(
                 fontWeight = Bold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(start = 22.dp, end = 22.dp)
+                    .padding(start = dimen22dp, end = dimen22dp)
             )
             Text(
                 text = music.artist,
@@ -72,7 +75,7 @@ fun MusicItem(
                 fontSize = 11.sp,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(start = 22.dp, end = 22.dp)
+                    .padding(start = dimen22dp, end = dimen22dp)
             )
         }
         Text(
@@ -83,7 +86,7 @@ fun MusicItem(
             fontSize = 11.sp,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
-                .padding(start = 22.dp, end = 22.dp)
+                .padding(start = dimen22dp, end = dimen22dp)
         )
     }
 }

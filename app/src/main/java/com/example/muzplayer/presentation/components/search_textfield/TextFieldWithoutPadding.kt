@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.muzplayer.presentation.ui.theme.AppTheme
 
 /**
  * Created by lukatsivilashvili on 07.12.22 12:05 PM.
@@ -37,6 +38,8 @@ fun TextFieldWithoutPadding(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val dimen8dp = AppTheme.dimens.dimen8dp
+
     // parameters below will be passed to BasicTextField for correct behavior of the text field,
     // and to the decoration box for proper styling and sizing
     val enabled = true
@@ -89,7 +92,7 @@ fun TextFieldWithoutPadding(
             interactionSource = interactionSource,
             // keep vertical paddings but change the horizontal
             contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
-                start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp
+                start = dimen8dp, end = dimen8dp, top = dimen8dp, bottom = dimen8dp
             )
         )
     }
