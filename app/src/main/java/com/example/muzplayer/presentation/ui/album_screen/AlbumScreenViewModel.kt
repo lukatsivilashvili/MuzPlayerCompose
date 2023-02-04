@@ -20,7 +20,7 @@ class AlbumScreenViewModel @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection
 ) : BaseViewModel(musicServiceConnection = musicServiceConnection) {
 
-    var albumItems = MutableStateFlow<List<Album>>(emptyList())
+    var albumItemsFlow = MutableStateFlow<List<Album>>(emptyList())
 
 
     init {
@@ -34,7 +34,7 @@ class AlbumScreenViewModel @Inject constructor(
 
     private suspend fun fetchAlbums() {
         val allSongs = musicSource.fetchAlbumData()
-        albumItems.value = allSongs
+        albumItemsFlow.value = allSongs
     }
 
     fun searchSong(songsList: List<Song>, query: String): Int {

@@ -17,10 +17,6 @@ data class Album(
     val imageUrl: String = "",
     val songCount: Int = 0
 ){
-    fun createAlbumArtUri(): String {
-        val uri = Uri.parse("content://media/external/audio/albumart")
-        return Uri.withAppendedPath(uri, albumId.toString()).toString()
-    }
     companion object {
         fun fromCursor(cursor: Cursor): Album {
 

@@ -14,32 +14,32 @@ class MediaStoreRepositoryImpl @Inject constructor(
     private val context: Context
 ) : MediaStoreRepo {
     override suspend fun getAllSongs(): List<Song> {
-
-        val cachedSongsList = SimpleDataStoreCache.songsMap[MediaType.SONG]
-        return if (!cachedSongsList.isNullOrEmpty()) {
-            cachedSongsList
-        } else {
-            val songsList: List<Song> = mediaStoreLoader.initializeListIfNeeded(
-                context = context,
-                typeOfMedia = MediaType.SONG
-            )
-            SimpleDataStoreCache.songsMap[MediaType.SONG] = songsList
-            songsList
-        }
+//        val cachedSongsList = SimpleDataStoreCache.songsMap[MediaType.SONG]
+//        d("cached", cachedSongsList.toString())
+//        return if (!cachedSongsList.isNullOrEmpty()) {
+//            cachedSongsList
+//        } else {
+//    }
+        val songsList: List<Song> = mediaStoreLoader.initializeListIfNeeded(
+            context = context,
+            typeOfMedia = MediaType.SONG
+        )
+//            SimpleDataStoreCache.songsMap[MediaType.SONG] = songsList
+        return songsList
     }
 
     override suspend fun getAllSongsFromAlbum(albumId: Long?): List<Song> {
-        val cachedAlbumSongsList = SimpleDataStoreCache.albumSongsMap[albumId]
-        return if (!cachedAlbumSongsList.isNullOrEmpty()) {
-            cachedAlbumSongsList
-        } else {
-            val albumSongsList: List<Song> = mediaStoreLoader.initializeListIfNeeded(
-                context = context,
-                typeOfMedia = MediaType.ALBUM_SONGS, albumId = albumId
-            )
-            SimpleDataStoreCache.albumSongsMap[albumId] = albumSongsList
-            albumSongsList
-        }
+//        val cachedAlbumSongsList = SimpleDataStoreCache.albumSongsMap[albumId]
+//        return if (!cachedAlbumSongsList.isNullOrEmpty()) {
+//            cachedAlbumSongsList
+//        } else {
+//        }
+        val albumSongsList: List<Song> = mediaStoreLoader.initializeListIfNeeded(
+            context = context,
+            typeOfMedia = MediaType.ALBUM_SONGS, albumId = albumId
+        )
+//            SimpleDataStoreCache.albumSongsMap[albumId] = albumSongsList
+        return albumSongsList
     }
 
     override suspend fun getAllAlbums(): List<Album> {

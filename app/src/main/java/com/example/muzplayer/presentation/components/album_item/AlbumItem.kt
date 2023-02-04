@@ -1,7 +1,6 @@
 package com.example.muzplayer.presentation.components.album_item
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -32,23 +31,21 @@ import com.example.muzplayer.presentation.ui.theme.AppTheme
 fun AlbumItem(
     album: Album,
     viewModel: AlbumScreenViewModel,
-    compSize: Dp = AppTheme.dimens.dimen200dp
+    compSize: Dp = AppTheme.dimens.dimen200dp,
+    modifier: Modifier = Modifier
 ) {
     val dimen22dp =AppTheme.dimens.dimen22dp
     val dimen8dp =AppTheme.dimens.dimen8dp
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .width(compSize)
             .background(MaterialTheme.colorScheme.surface)
-            .padding(AppTheme.dimens.dimen8dp)
-            .clickable {
-
-            },
+            .padding(AppTheme.dimens.dimen8dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .width(compSize)
                 .height(compSize)
                 .clip(RoundedCornerShape(5.dp)),
@@ -66,7 +63,7 @@ fun AlbumItem(
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
+                modifier = modifier
                     .padding(start = dimen22dp, end = dimen22dp, top = dimen8dp)
             )
             Text(
@@ -76,7 +73,7 @@ fun AlbumItem(
                 style = MaterialTheme.typography.bodyMedium,
                 fontSize = 11.sp,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
+                modifier = modifier
                     .padding(start = dimen22dp, end = dimen22dp)
                     .align(Alignment.CenterHorizontally)
             )

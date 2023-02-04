@@ -10,8 +10,8 @@ import androidx.compose.material.icons.outlined.PlaylistPlay
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class MusicScreen(
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
+    val selectedIcon: ImageVector? = null,
+    val unselectedIcon: ImageVector? = null,
 ) {
     Library(
         selectedIcon = Icons.Filled.Audiotrack,
@@ -25,7 +25,8 @@ enum class MusicScreen(
     Playlists(
         selectedIcon = Icons.Filled.PlaylistPlay,
         unselectedIcon = Icons.Outlined.PlaylistPlay
-    );
+    ),
+    AlbumTracks;
 
     companion object {
         fun fromRoute(route: String?): MusicScreen =
@@ -33,6 +34,7 @@ enum class MusicScreen(
                 Albums.name -> Albums
                 Library.name -> Library
                 Playlists.name -> Playlists
+                AlbumTracks.name -> AlbumTracks
                 null -> Library
                 else -> throw IllegalArgumentException("Route $route is not recognized.")
             }

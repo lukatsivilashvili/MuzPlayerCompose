@@ -1,7 +1,17 @@
 package com.example.muzplayer.presentation.components
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.muzplayer.common.MusicScreen
@@ -28,9 +38,9 @@ fun BottomNavigationBar(
                     onClick = { onItemSelected(screen) },
                     icon = {
                         if (selected) {
-                            Icon(imageVector = screen.selectedIcon, contentDescription = screen.name)
+                            screen.selectedIcon?.let { Icon(imageVector = it, contentDescription = screen.name) }
                         } else {
-                            Icon(imageVector = screen.unselectedIcon, contentDescription = screen.name)
+                            screen.unselectedIcon?.let { Icon(imageVector = it, contentDescription = screen.name) }
                         }
                     },
                     label = {

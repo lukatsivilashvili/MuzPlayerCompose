@@ -32,6 +32,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.muzplayer.common.MusicScreen
 import com.example.muzplayer.presentation.components.BottomNavigationBar
+import com.example.muzplayer.presentation.ui.album_tracks_screen.AlbumTracksScreen
 import com.example.muzplayer.presentation.ui.bottom_bar.HomeBottomBar
 import com.example.muzplayer.presentation.ui.library_screen.LibraryScreen
 import com.example.muzplayer.presentation.ui.player_screen.PlayerScreen
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainActivityScreen(
 ) {
-    val allScreens = MusicScreen.values().toList()
+    val allScreens = MusicScreen.values().toList().filter { it.selectedIcon != null }
     val navController = rememberNavController()
     val backstackEntry = navController.currentBackStackEntryAsState()
     val currentScreen = MusicScreen.fromRoute(backstackEntry.value?.destination?.route)
@@ -140,10 +141,13 @@ fun MusicNavHost(
             LibraryScreen()
         }
         composable(MusicScreen.Albums.name) {
-            AlbumScreen()
+            AlbumScreen(navHostController = navController)
         }
         composable(MusicScreen.Playlists.name) {
             PlaylistScreen()
+        }
+        composable(MusicScreen.AlbumTracks.name){
+            AlbumTracksScreen(navHostController = navController)
         }
     }
 }

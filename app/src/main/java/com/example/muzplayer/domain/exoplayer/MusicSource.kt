@@ -86,13 +86,16 @@ class MusicSource @Inject constructor(
         state = STATE_INITIALIZING
         val allAlbums = repository.getAllAlbums()
         state = STATE_INITIALIZED
+        d("songs1", allAlbums.toString())
+
         return allAlbums
     }
 
-    suspend fun fetchSongsFromAlbum(albumId: Long): List<Song> {
+    suspend fun fetchAlbumTracksById(albumId: Long): List<Song> {
         state = STATE_INITIALIZING
         val albumSongs = repository.getAllSongsFromAlbum(albumId = albumId)
         state = STATE_INITIALIZED
+        d("songs2", albumSongs.toString())
         return albumSongs
     }
 

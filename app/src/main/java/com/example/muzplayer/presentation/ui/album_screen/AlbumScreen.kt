@@ -1,5 +1,5 @@
-
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +22,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.muzplayer.common.MusicScreen
 import com.example.muzplayer.domain.models.Album
 import com.example.muzplayer.presentation.components.album_item.AlbumItem
@@ -32,8 +33,9 @@ import com.example.muzplayer.presentation.ui.theme.AppTheme
 @Composable
 fun AlbumScreen(
     viewModel: AlbumScreenViewModel = hiltViewModel(),
+    navHostController: NavHostController
 ) {
-    val albums = viewModel.albumItems.collectAsState()
+    val albums = viewModel.albumItemsFlow.collectAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentScreen = MusicScreen.Albums
     val dimen16dp = AppTheme.dimens.dimen16dp
@@ -82,6 +84,7 @@ fun AlbumScreen(
         ) {
             AlbumScreenContent(
                 data = albums.value,
+                navHostController = navHostController
             )
         }
     }
@@ -90,7 +93,8 @@ fun AlbumScreen(
 @Composable
 fun AlbumScreenContent(
     data: List<Album>,
-    viewModel: AlbumScreenViewModel = hiltViewModel()
+    viewModel: AlbumScreenViewModel = hiltViewModel(),
+    navHostController: NavHostController
 ) {
     LazyVerticalGrid(
         modifier = Modifier
@@ -99,7 +103,16 @@ fun AlbumScreenContent(
         columns = GridCells.Adaptive(minSize = AppTheme.dimens.dimen150dp)
     ) {
         items(data) { albumItem ->
-            AlbumItem(album = albumItem, viewModel = viewModel)
+            AlbumItem(
+                album = albumItem,
+                viewModel = viewModel,
+                modifier = Modifier.clickable {
+                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                        key = "albumId",
+                        value = albumItem.albumId
+                    )
+                    navHostController.navigate(route = MusicScreen.AlbumTracks.name)
+                })
         }
     }
 }
